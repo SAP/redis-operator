@@ -1,0 +1,28 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: redis-operator
+webhooks:
+- name: redis-operator.cs.sap.com
+  admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: ${WEBHOOK_CA_CERT}
+    url: https://${WEBHOOK_HOSTNAME}:2443/admission/cache.cs.sap.com/v1alpha1/redis/validate
+  rules:
+  - apiGroups:
+    - cache.cs.sap.com
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    - DELETE
+    resources:
+    - redis
+    scope: Namespaced
+  matchPolicy: Equivalent
+  sideEffects: None
+  timeoutSeconds: 10
+  failurePolicy: Fail

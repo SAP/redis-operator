@@ -1,0 +1,18 @@
+{{- if .sentinelEnabled }}
+sentinelEnabled: true
+host: {{ .host }}
+port: {{ .port }}
+sentinelHost: {{ .sentinelHost }}
+sentinelPort: {{ .sentinelPort }}
+{{- else }}
+masterHost: {{ .masterHost }}
+masterPort: {{ .masterPort }}
+replicaHost: {{ .replicaHost }}
+replicaPort: {{ .replicaPort }}
+{{- end }}
+password: {{ .password }}
+{{- if .tlsEnabled }}
+tlsEnabled: true
+caData: |
+  {{- .caData | nindent 2 }}
+{{- end }}

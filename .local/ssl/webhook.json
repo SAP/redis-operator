@@ -1,0 +1,14 @@
+{
+  "CN": "redis-operator-webhook.default.svc.cluster.local",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "hosts": [
+    "redis-operator-webhook.default.svc.cluster.local",
+    "redis-operator-webhook.default.svc",
+    "redis-operator-webhook.default",
+    "*.internal",
+    "localhost"
+  ]
+}

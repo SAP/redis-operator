@@ -1,0 +1,405 @@
+/*
+Copyright 2023.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package operator_test
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"reflect"
+	"testing"
+	"time"
+
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+	"github.com/sap/component-operator-runtime/pkg/component"
+
+	admissionv1 "k8s.io/api/admissionregistration/v1"
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"k8s.io/client-go/discovery"
+	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
+	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
+	apiregistrationv1 "k8s.io/kube-aggregator/pkg/apis/apiregistration/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/envtest"
+	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
+	operatorv1alpha1 "github.com/sap/redis-operator/api/v1alpha1"
+	"github.com/sap/redis-operator/pkg/operator"
+)
+
+func TestWebhooks(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Webhook Suite")
+}
+
+var testEnv *envtest.Environment
+var cfg *rest.Config
+var cli client.Client
+var ctx context.Context
+var cancel context.CancelFunc
+var tmpdir string
+
+var _ = BeforeSuite(func() {
+	var err error
+
+	By("initializing")
+	log.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
+	tmpdir, err = os.MkdirTemp("", "envtest")
+	Expect(err).NotTo(HaveOccurred())
+	ctx, cancel = context.WithCancel(context.TODO())
+
+	By("bootstrapping test environment")
+	testEnv = &envtest.Environment{
+		CRDDirectoryPaths: []string{"../../crds"},
+		WebhookInstallOptions: envtest.WebhookInstallOptions{
+			ValidatingWebhooks: []*admissionv1.ValidatingWebhookConfiguration{
+				buildValidatingWebhookConfiguration(),
+			},
+		},
+	}
+	cfg, err = testEnv.Start()
+	Expect(err).NotTo(HaveOccurred())
+	Expect(cfg).NotTo(BeNil())
+	webhookInstallOptions := &testEnv.WebhookInstallOptions
+
+	err = clientcmd.WriteToFile(*kubeConfigFromRestConfig(cfg), fmt.Sprintf("%s/kubeconfig", tmpdir))
+	Expect(err).NotTo(HaveOccurred())
+	fmt.Printf("A temporary kubeconfig for the envtest environment can be found here: %s/kubeconfig\n", tmpdir)
+
+	By("populating scheme")
+	scheme := runtime.NewScheme()
+	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
+	utilruntime.Must(apiextensionsv1.AddToScheme(scheme))
+	utilruntime.Must(apiregistrationv1.AddToScheme(scheme))
+	operator.InitScheme(scheme)
+
+	By("initializing client")
+	cli, err = client.New(cfg, client.Options{Scheme: scheme})
+	Expect(err).NotTo(HaveOccurred())
+
+	By("creating manager")
+	mgr, err := ctrl.NewManager(cfg, ctrl.Options{
+		Scheme:                scheme,
+		Host:                  webhookInstallOptions.LocalServingHost,
+		Port:                  webhookInstallOptions.LocalServingPort,
+		CertDir:               webhookInstallOptions.LocalServingCertDir,
+		ClientDisableCacheFor: append(operator.GetUncacheableTypes(), &apiextensionsv1.CustomResourceDefinition{}, &apiregistrationv1.APIService{}),
+	})
+	Expect(err).NotTo(HaveOccurred())
+
+	discoveryClient, err := discovery.NewDiscoveryClientForConfig(mgr.GetConfig())
+	Expect(err).NotTo(HaveOccurred())
+
+	err = operator.Setup(mgr, discoveryClient)
+	Expect(err).NotTo(HaveOccurred())
+
+	By("starting dummy controller-manager")
+	go func() {
+		defer GinkgoRecover()
+		// since there is no controller-manager in envtest, we fake all statefulsets into a ready state
+		// such that kstatus recognizes them as 'Current'
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-time.After(100 * time.Millisecond):
+				statefulSetList := &appsv1.StatefulSetList{}
+				err := cli.List(ctx, statefulSetList)
+				Expect(err).NotTo(HaveOccurred())
+				for _, statefulSet := range statefulSetList.Items {
+					status := &statefulSet.Status
+					oldStatus := status.DeepCopy()
+					status.ObservedGeneration = statefulSet.Generation
+					status.Replicas = *statefulSet.Spec.Replicas
+					status.ReadyReplicas = *statefulSet.Spec.Replicas
+					status.AvailableReplicas = *statefulSet.Spec.Replicas
+					status.CurrentReplicas = *statefulSet.Spec.Replicas
+					status.UpdatedReplicas = *statefulSet.Spec.Replicas
+					if reflect.DeepEqual(status, oldStatus) {
+						continue
+					}
+					err = cli.Status().Update(ctx, &statefulSet)
+					Expect(err).NotTo(HaveOccurred())
+				}
+			}
+		}
+	}()
+
+	By("starting manager")
+	go func() {
+		defer GinkgoRecover()
+		err := mgr.Start(ctx)
+		Expect(err).NotTo(HaveOccurred())
+	}()
+
+	By("waiting for operator to become ready")
+	Eventually(func() error { return mgr.GetWebhookServer().StartedChecker()(nil) }, "10s", "100ms").Should(Succeed())
+})
+
+var _ = AfterSuite(func() {
+	By("tearing down the test environment")
+	cancel()
+	err := testEnv.Stop()
+	Expect(err).NotTo(HaveOccurred())
+	err = os.RemoveAll(tmpdir)
+	Expect(err).NotTo(HaveOccurred())
+})
+
+var _ = Describe("Deploy Redis", func() {
+	var namespace string
+
+	BeforeEach(func() {
+		namespace = createNamepace(cli)
+	})
+
+	It("should deploy Redis with one master and zero read replicas, with TLS disabled", func() {
+		redis := &operatorv1alpha1.Redis{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: namespace,
+				Name:      "test",
+			},
+		}
+
+		err := cli.Create(ctx, redis)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(func() error {
+			if err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: redis.Name}, redis); err != nil {
+				return err
+			}
+			if redis.Status.State != component.StateReady {
+				return fmt.Errorf("again")
+			}
+			return nil
+		}, "10s", "100ms").Should(Succeed())
+
+		authSecret := &corev1.Secret{}
+		err = cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: fmt.Sprintf("redis-%s", redis.Name)}, authSecret)
+		Expect(err).NotTo(HaveOccurred())
+
+		bindingSecret := &corev1.Secret{}
+		err = cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: fmt.Sprintf("redis-%s-binding", redis.Name)}, bindingSecret)
+		Expect(err).NotTo(HaveOccurred())
+		expectedSecretData := map[string][]byte{
+			"masterHost":  []byte(fmt.Sprintf("redis-%s-master.%s.svc.cluster.local", redis.Name, redis.Namespace)),
+			"masterPort":  []byte("6379"),
+			"replicaHost": []byte(fmt.Sprintf("redis-%s-replicas.%s.svc.cluster.local", redis.Name, redis.Namespace)),
+			"replicaPort": []byte("6379"),
+			"password":    authSecret.Data["redis-password"],
+		}
+		Expect(bindingSecret.Data).To(Equal(expectedSecretData))
+
+		// validate that sentinel.enabled is immutable
+		_redis := redis.DeepCopy()
+		_redis.Spec.Sentinel = &operatorv1alpha1.SentinelProperties{Enabled: true}
+		err = cli.Update(ctx, _redis)
+		Expect(apierrors.IsForbidden(err)).To(BeTrue())
+
+		// validate that persistence.enabled is immutable
+		_redis = redis.DeepCopy()
+		_redis.Spec.Persistence = &operatorv1alpha1.PersistenceProperties{Enabled: true}
+		err = cli.Update(ctx, _redis)
+		Expect(apierrors.IsForbidden(err)).To(BeTrue())
+	})
+
+	It("should deploy Redis with sentinel (three nodes), with metrics, TLS, persistence enabled", func() {
+		redis := &operatorv1alpha1.Redis{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: namespace,
+				Name:      "test",
+			},
+			Spec: operatorv1alpha1.RedisSpec{
+				Replicas: 3,
+				Sentinel: &operatorv1alpha1.SentinelProperties{
+					Enabled: true,
+				},
+				Metrics: &operatorv1alpha1.MetricsProperties{
+					Enabled: true,
+				},
+				TLS: &operatorv1alpha1.TLSProperties{
+					Enabled: true,
+				},
+				Persistence: &operatorv1alpha1.PersistenceProperties{
+					Enabled: true,
+				},
+			},
+		}
+
+		err := cli.Create(ctx, redis)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(func() error {
+			if err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: redis.Name}, redis); err != nil {
+				return err
+			}
+			if redis.Status.State != component.StateReady {
+				return fmt.Errorf("again")
+			}
+			return nil
+		}, "10s", "100ms").Should(Succeed())
+
+		authSecret := &corev1.Secret{}
+		err = cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: fmt.Sprintf("redis-%s", redis.Name)}, authSecret)
+		Expect(err).NotTo(HaveOccurred())
+
+		tlsSecret := &corev1.Secret{}
+		err = cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: fmt.Sprintf("redis-%s-crt", redis.Name)}, tlsSecret)
+		Expect(err).NotTo(HaveOccurred())
+
+		bindingSecret := &corev1.Secret{}
+		err = cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: fmt.Sprintf("redis-%s-binding", redis.Name)}, bindingSecret)
+		Expect(err).NotTo(HaveOccurred())
+		expectedSecretData := map[string][]byte{
+			"sentinelEnabled": []byte("true"),
+			"host":            []byte(fmt.Sprintf("redis-%s.%s.svc.cluster.local", redis.Name, redis.Namespace)),
+			"port":            []byte("6379"),
+			"sentinelHost":    []byte(fmt.Sprintf("redis-%s.%s.svc.cluster.local", redis.Name, redis.Namespace)),
+			"sentinelPort":    []byte("26379"),
+			"password":        authSecret.Data["redis-password"],
+			"tlsEnabled":      []byte("true"),
+			"caData":          tlsSecret.Data["ca.crt"],
+		}
+		Expect(bindingSecret.Data).To(Equal(expectedSecretData))
+
+		// validate that sentinel.enabled is immutable
+		_redis := redis.DeepCopy()
+		_redis.Spec.Sentinel = &operatorv1alpha1.SentinelProperties{Enabled: false}
+		err = cli.Update(ctx, _redis)
+		Expect(apierrors.IsForbidden(err)).To(BeTrue())
+		_redis = redis.DeepCopy()
+		_redis.Spec.Sentinel = nil
+		err = cli.Update(ctx, _redis)
+		Expect(apierrors.IsForbidden(err)).To(BeTrue())
+
+		// validate that persistence.enabled is immutable
+		_redis = redis.DeepCopy()
+		_redis.Spec.Persistence = &operatorv1alpha1.PersistenceProperties{Enabled: false}
+		err = cli.Update(ctx, _redis)
+		Expect(apierrors.IsForbidden(err)).To(BeTrue())
+		_redis = redis.DeepCopy()
+		_redis.Spec.Persistence = nil
+		err = cli.Update(ctx, _redis)
+		Expect(apierrors.IsForbidden(err)).To(BeTrue())
+	})
+
+	It("should deploy Redis with one master and some read replicas, with a custom binding template", func() {
+		redis := &operatorv1alpha1.Redis{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: namespace,
+				Name:      "test",
+			},
+			Spec: operatorv1alpha1.RedisSpec{
+				Replicas: 2,
+				Binding: &operatorv1alpha1.BindingProperties{
+					Template: &[]string{"masterAddress: {{ .masterHost }}:{{ .masterPort }}\nreplicaAddress: {{ .replicaHost }}:{{ .replicaPort }}\n"}[0],
+				},
+			},
+		}
+
+		err := cli.Create(ctx, redis)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(func() error {
+			if err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: redis.Name}, redis); err != nil {
+				return err
+			}
+			if redis.Status.State != component.StateReady {
+				return fmt.Errorf("again")
+			}
+			return nil
+		}, "10s", "100ms").Should(Succeed())
+
+		bindingSecret := &corev1.Secret{}
+		err = cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: fmt.Sprintf("redis-%s-binding", redis.Name)}, bindingSecret)
+		Expect(err).NotTo(HaveOccurred())
+		expectedSecretData := map[string][]byte{
+			"masterAddress":  []byte(fmt.Sprintf("redis-%s-master.%s.svc.cluster.local:%d", redis.Name, redis.Namespace, 6379)),
+			"replicaAddress": []byte(fmt.Sprintf("redis-%s-replicas.%s.svc.cluster.local:%d", redis.Name, redis.Namespace, 6379)),
+		}
+		Expect(bindingSecret.Data).To(Equal(expectedSecretData))
+	})
+})
+
+// assemble validatingwebhookconfiguration descriptor
+func buildValidatingWebhookConfiguration() *admissionv1.ValidatingWebhookConfiguration {
+	return &admissionv1.ValidatingWebhookConfiguration{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "validate-redis",
+		},
+		Webhooks: []admissionv1.ValidatingWebhook{{
+			Name:                    "validate-redis.test.local",
+			AdmissionReviewVersions: []string{"v1"},
+			ClientConfig: admissionv1.WebhookClientConfig{
+				Service: &admissionv1.ServiceReference{
+					Path: &[]string{fmt.Sprintf("/admission/%s/redis/validate", operatorv1alpha1.GroupVersion)}[0],
+				},
+			},
+			Rules: []admissionv1.RuleWithOperations{{
+				Operations: []admissionv1.OperationType{
+					admissionv1.Create,
+					admissionv1.Update,
+					admissionv1.Delete,
+				},
+				Rule: admissionv1.Rule{
+					APIGroups:   []string{operatorv1alpha1.GroupVersion.Group},
+					APIVersions: []string{operatorv1alpha1.GroupVersion.Version},
+					Resources:   []string{"redis"},
+				},
+			}},
+			SideEffects: &[]admissionv1.SideEffectClass{admissionv1.SideEffectClassNone}[0],
+		}},
+	}
+}
+
+func createNamepace(cli client.Client) string {
+	namespace := &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{GenerateName: "ns-"}}
+	err := cli.Create(ctx, namespace)
+	Expect(err).NotTo(HaveOccurred())
+	return namespace.Name
+}
+
+func kubeConfigFromRestConfig(restConfig *rest.Config) *clientcmdapi.Config {
+	apiConfig := clientcmdapi.NewConfig()
+
+	apiConfig.Clusters["envtest"] = clientcmdapi.NewCluster()
+	cluster := apiConfig.Clusters["envtest"]
+	cluster.Server = restConfig.Host
+	cluster.CertificateAuthorityData = restConfig.CAData
+
+	apiConfig.AuthInfos["envtest"] = clientcmdapi.NewAuthInfo()
+	authInfo := apiConfig.AuthInfos["envtest"]
+	authInfo.ClientKeyData = restConfig.KeyData
+	authInfo.ClientCertificateData = restConfig.CertData
+
+	apiConfig.Contexts["envtest"] = clientcmdapi.NewContext()
+	context := apiConfig.Contexts["envtest"]
+	context.Cluster = "envtest"
+	context.AuthInfo = "envtest"
+
+	apiConfig.CurrentContext = "envtest"
+
+	return apiConfig
+}

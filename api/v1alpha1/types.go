@@ -1,0 +1,142 @@
+/*
+Copyright 2023 SAP SE.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package v1alpha1
+
+import (
+	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	runtime "k8s.io/apimachinery/pkg/runtime"
+
+	"github.com/sap/component-operator-runtime/pkg/component"
+	componentoperatorruntimetypes "github.com/sap/component-operator-runtime/pkg/types"
+)
+
+// RedisSpec defines the desired state of Redis
+type RedisSpec struct {
+	Version string `json:"version,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:default=1
+	Replicas                                int `json:"replicas,omitempty"`
+	component.KubernetesPodProperties       `json:",inline"`
+	component.KubernetesContainerProperties `json:",inline"`
+	Sentinel                                *SentinelProperties    `json:"sentinel,omitempty"`
+	Metrics                                 *MetricsProperties     `json:"metrics,omitempty"`
+	TLS                                     *TLSProperties         `json:"tls,omitempty"`
+	Persistence                             *PersistenceProperties `json:"persistence,omitempty"`
+	Binding                                 *BindingProperties     `json:"binding,omitempty"`
+}
+
+// SentinelProperties models attributes of the sentinel sidecar
+type SentinelProperties struct {
+	Enabled                                 bool `json:"enabled,omitempty"`
+	component.KubernetesContainerProperties `json:",inline"`
+}
+
+// MetricsProperties models attributes of the metrics exporter sidecar
+type MetricsProperties struct {
+	Enabled                                 bool `json:"enabled,omitempty"`
+	component.KubernetesContainerProperties `json:",inline"`
+}
+
+// TLSProperties models TLS settings of the redis services
+type TLSProperties struct {
+	Enabled     bool                   `json:"enabled,omitempty"`
+	CertManager *CertManagerProperties `json:"certManager,omitempty"`
+}
+
+// CertManagerProperties models cert-manager related attributes
+type CertManagerProperties struct {
+	Issuer *ObjectReference `json:"issuer,omitempty"`
+}
+
+// ObjectReference models a reference to a Kubernetes object
+type ObjectReference struct {
+	Group string `json:"group,omitempty"`
+	Kind  string `json:"kind,omitempty"`
+	Name  string `json:"name,omitempty"`
+}
+
+// PersistenceProperties models persistence related attributes
+type PersistenceProperties struct {
+	Enabled      bool               `json:"enabled,omitempty"`
+	Size         *resource.Quantity `json:"size,omitempty"`
+	StorageClass string             `json:"storageClass,omitempty"`
+}
+
+// BindingProperties models custom properties for the generated binding secret
+type BindingProperties struct {
+	Template *string `json:"template,omitempty"`
+}
+
+// RedisStatus defines the observed state of Redis
+type RedisStatus struct {
+	component.Status `json:",inline"`
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="State",type=string,JSONPath=`.status.state`
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
+// Redis is the Schema for the redis API
+type Redis struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec RedisSpec `json:"spec,omitempty"`
+	// +kubebuilder:default={"observedGeneration":-1}
+	Status RedisStatus `json:"status,omitempty"`
+}
+
+var _ component.Component = &Redis{}
+
+// +kubebuilder:object:root=true
+
+// RedisList contains a list of Redis
+type RedisList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Redis `json:"items"`
+}
+
+func (s *RedisSpec) ToUnstructured() map[string]any {
+	result, err := runtime.DefaultUnstructuredConverter.ToUnstructured(s)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
+
+func (c *Redis) GetDeploymentNamespace() string {
+	return c.Namespace
+}
+
+func (c *Redis) GetDeploymentName() string {
+	return c.Name
+}
+
+func (c *Redis) GetSpec() componentoperatorruntimetypes.Unstructurable {
+	return &c.Spec
+}
+
+func (c *Redis) GetStatus() *component.Status {
+	return &c.Status.Status
+}
+
+func init() {
+	SchemeBuilder.Register(&Redis{}, &RedisList{})
+}
