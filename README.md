@@ -2,7 +2,7 @@
 
 ## About this project
 This repository adds a new resource type `Redis` (`redis.cache.cs.sap.com`) to Kubernetes clusters,
-which can be used to deploy redis clusters for cluster-internal usage. For example:
+which can be used to deploy redis caches for cluster-internal usage. For example:
 
 ```yaml
 apiVersion: cache.cs.sap.com/v1alpha1
