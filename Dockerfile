@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM golang:1.19 as builder
+FROM --platform=$BUILDPLATFORM golang:1.19 as builder
 ARG TARGETOS
 ARG TARGETARCH
 
@@ -21,7 +21,7 @@ COPY Makefile Makefile
 
 # Run tests and build
 RUN make envtest \
- && KUBEBUILDER_ASSETS="/workspace/bin/k8s/current" go test ./... \
+ && CGO_ENABLED=0 KUBEBUILDER_ASSETS="/workspace/bin/k8s/current" go test ./... \
  && CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o manager main.go
 
 # Use distroless as minimal base image to package the manager binary
