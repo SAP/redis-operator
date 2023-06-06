@@ -105,11 +105,13 @@ var _ = BeforeSuite(func() {
 
 	By("creating manager")
 	mgr, err := ctrl.NewManager(cfg, ctrl.Options{
-		Scheme:                scheme,
-		Host:                  webhookInstallOptions.LocalServingHost,
-		Port:                  webhookInstallOptions.LocalServingPort,
-		CertDir:               webhookInstallOptions.LocalServingCertDir,
-		ClientDisableCacheFor: append(operator.GetUncacheableTypes(), &apiextensionsv1.CustomResourceDefinition{}, &apiregistrationv1.APIService{}),
+		Scheme:                 scheme,
+		MetricsBindAddress:     "0",
+		HealthProbeBindAddress: "0",
+		Host:                   webhookInstallOptions.LocalServingHost,
+		Port:                   webhookInstallOptions.LocalServingPort,
+		CertDir:                webhookInstallOptions.LocalServingCertDir,
+		ClientDisableCacheFor:  append(operator.GetUncacheableTypes(), &apiextensionsv1.CustomResourceDefinition{}, &apiregistrationv1.APIService{}),
 	})
 	Expect(err).NotTo(HaveOccurred())
 
