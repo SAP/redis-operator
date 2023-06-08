@@ -144,6 +144,10 @@ these attributes will be automatically populated by the controller, as in the ab
 
 The recommended deployment method is to use the [Redis Operator Helm chart](https://github.com/sap/redis-operator-helm/).
 
+## Documentation
+
+The API reference is here: [https://pkg.go.dev/github.com/sap/redis-operator](https://pkg.go.dev/github.com/sap/redis-operator).
+
 ## Support, Feedback, Contributing
 
 This project is open to feature requests/suggestions, bug reports etc. via [GitHub issues](https://github.com/SAP/redis-operator/issues). Contribution and feedback are encouraged and always welcome. For more information about how to contribute, the project structure, as well as additional contribution information, see our [Contribution Guidelines](CONTRIBUTING.md).
