@@ -42,9 +42,9 @@ import (
 	"github.com/sap/redis-operator/pkg/operator"
 )
 
-func TestWebhooks(t *testing.T) {
+func TestOperator(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Webhook Suite")
+	RunSpecs(t, "Operator")
 }
 
 var testEnv *envtest.Environment
