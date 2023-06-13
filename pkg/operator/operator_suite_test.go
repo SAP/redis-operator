@@ -270,6 +270,7 @@ var _ = Describe("Deploy Redis", func() {
 			"port":            []byte("6379"),
 			"sentinelHost":    []byte(fmt.Sprintf("redis-%s.%s.svc.cluster.local", redis.Name, redis.Namespace)),
 			"sentinelPort":    []byte("26379"),
+			"masterName":      []byte("mymaster"),
 			"password":        authSecret.Data["redis-password"],
 			"tlsEnabled":      []byte("true"),
 			"caData":          tlsSecret.Data["ca.crt"],

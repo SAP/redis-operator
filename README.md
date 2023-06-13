@@ -85,6 +85,7 @@ stringData:
     ...
     -----END CERTIFICATE-----
   host: redis-test.testns.svc.cluster.local
+  masterName: mymaster
   password: BM5vR1ziGE
   port: "6379"
   sentinelEnabled: "true"
@@ -97,7 +98,7 @@ The format of the secret data can be overridden by specifying a go temmplate as 
 In that go template, the following variables may be used:
 - `.sentinelEnabled` (whether sentinel mode is enabled or not)
 - `.masterHost`, `.masterPort`, `.replicaHost`, `.replicaPort` (only if sentinel is disabled)
-- `.host`, `.port`, `.sentinelHost`, `.sentinelPort` (only if sentinel is enabled)
+- `.host`, `.port`, `.sentinelHost`, `.sentinelPort`, `.masterName` (only if sentinel is enabled)
 - `.tlsEnabled` (whether TLS encryption is enabled or not)
 - `.caData` (CA certificate that clients may use to connect to redis)
 

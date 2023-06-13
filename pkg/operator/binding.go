@@ -31,6 +31,7 @@ func reconcileBinding(ctx context.Context, client client.Client, redis *operator
 		params["port"] = 6379
 		params["sentinelHost"] = fmt.Sprintf("redis-%s.%s.svc.cluster.local", redis.Name, redis.Namespace)
 		params["sentinelPort"] = 26379
+		params["masterName"] = "mymaster"
 	} else {
 		params["masterHost"] = fmt.Sprintf("redis-%s-master.%s.svc.cluster.local", redis.Name, redis.Namespace)
 		params["masterPort"] = 6379

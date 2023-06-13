@@ -4,6 +4,7 @@ host: {{ .host }}
 port: {{ .port }}
 sentinelHost: {{ .sentinelHost }}
 sentinelPort: {{ .sentinelPort }}
+masterName: {{ .masterName }}
 {{- else }}
 masterHost: {{ .masterHost }}
 masterPort: {{ .masterPort }}
