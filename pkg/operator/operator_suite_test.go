@@ -59,9 +59,9 @@ var _ = BeforeSuite(func() {
 
 	By("initializing")
 	log.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
-	tmpdir, err = os.MkdirTemp("", "envtest")
-	Expect(err).NotTo(HaveOccurred())
 	ctx, cancel = context.WithCancel(context.TODO())
+	tmpdir, err = os.MkdirTemp("", "")
+	Expect(err).NotTo(HaveOccurred())
 
 	By("bootstrapping test environment")
 	testEnv = &envtest.Environment{
