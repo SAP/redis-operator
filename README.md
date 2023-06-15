@@ -1,4 +1,4 @@
-# Kubernetes Operator For Redis ™
+# Kubernetes Operator For Redis™
 
 Disclaimer: Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by SAP is for referential purposes only and does not indicate any sponsorship, endorsement, or affiliation between Redis Ltd. and SAP.
 
