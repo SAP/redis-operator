@@ -136,6 +136,9 @@ var _ = BeforeSuite(func() {
 						continue
 					}
 					err = cli.Status().Update(ctx, &statefulSet)
+					if apierrors.IsNotFound(err) || apierrors.IsConflict(err) {
+						err = nil
+					}
 					Expect(err).NotTo(HaveOccurred())
 				}
 			}
