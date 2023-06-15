@@ -16,6 +16,7 @@ COPY main.go main.go
 COPY api/ api/
 COPY pkg/ pkg/
 COPY internal/ internal/
+COPY tests/ tests/
 COPY crds/ crds/
 COPY Makefile Makefile
 
