@@ -24,8 +24,38 @@ defaults:
     shell: bash
 
 jobs:
+  test:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup go
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: 'go.mod'
+
+    - name: Check that generated artifacts are up-to-date
+      run: |
+        make generate
+        echo "Running 'git status' ..."
+        git status --porcelain | tee status.out
+        if [[ -s status.out ]]; then
+          echo "Generated artifacts are not up-to-date; probably 'make generate' was not run before commiting"
+          exit 1
+        else
+          echo "Generated artifacts are up-to-date"
+        fi
+
+    - name: Run tests
+      run: |
+        make envtest
+        KUBEBUILDER_ASSETS=$(pwd)/bin/k8s/current E2E_ENABLED=${{ github.event_name == 'release' }} go test -count 1 ./...
+
   build:
     runs-on: ubuntu-22.04
+    needs: test
     permissions:
       contents: read
       packages: write
