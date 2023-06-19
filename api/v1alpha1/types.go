@@ -80,6 +80,7 @@ type RedisStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="State",type=string,JSONPath=`.status.state`
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +genclient
 
 // Redis is the Schema for the redis API
 type Redis struct {
