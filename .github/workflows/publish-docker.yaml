@@ -109,3 +109,4 @@ jobs:
           type=gha,scope=${{ github.ref_name }},mode=max
         push: ${{ github.event_name == 'release' }}
         tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
