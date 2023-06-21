@@ -3,9 +3,10 @@ SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and redis-operat
 SPDX-License-Identifier: Apache-2.0
 */
 
-// Package v1alpha1 contains API Schema definitions for the cache v1alpha1 API group
 // +kubebuilder:object:generate=true
 // +groupName=cache.cs.sap.com
+
+// Package v1alpha1 contains API Schema definitions for the cache v1alpha1 API group
 package v1alpha1
 
 import (
