@@ -147,7 +147,11 @@ these attributes will be automatically populated by the controller, as in the ab
 
 ## Requirements and Setup
 
-The recommended deployment method is to use the [Redis Operator Helm chart](https://github.com/sap/redis-operator-helm/).
+The recommended deployment method is to use the [Helm chart](https://github.com/sap/redis-operator-helm):
+
+```bash
+helm upgrade -i redis-operator oci://ghcr.io/sap/redis-operator-helm/redis-operator
+```
 
 ## Documentation
 
