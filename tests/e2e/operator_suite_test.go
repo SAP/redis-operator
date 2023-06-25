@@ -373,7 +373,7 @@ func createRedis(redis *operatorv1alpha1.Redis, wait bool, timeout string) {
 		if err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: redis.Name}, redis); err != nil {
 			return err
 		}
-		if redis.Status.State != component.StateReady {
+		if redis.Status.ObservedGeneration != redis.Generation || redis.Status.State != component.StateReady {
 			return fmt.Errorf("not ready - try again")
 		}
 		return nil

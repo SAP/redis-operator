@@ -169,7 +169,7 @@ var _ = Describe("Deploy Redis", func() {
 	var namespace string
 
 	BeforeEach(func() {
-		namespace = createNamepace(cli)
+		namespace = createNamepace()
 	})
 
 	It("should deploy Redis with one master and zero read replicas, with TLS disabled", func() {
@@ -186,7 +186,7 @@ var _ = Describe("Deploy Redis", func() {
 			if err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: redis.Name}, redis); err != nil {
 				return err
 			}
-			if redis.Status.State != component.StateReady {
+			if redis.Status.ObservedGeneration != redis.Generation || redis.Status.State != component.StateReady {
 				return fmt.Errorf("again")
 			}
 			return nil
@@ -250,7 +250,7 @@ var _ = Describe("Deploy Redis", func() {
 			if err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: redis.Name}, redis); err != nil {
 				return err
 			}
-			if redis.Status.State != component.StateReady {
+			if redis.Status.ObservedGeneration != redis.Generation || redis.Status.State != component.StateReady {
 				return fmt.Errorf("again")
 			}
 			return nil
@@ -321,7 +321,7 @@ var _ = Describe("Deploy Redis", func() {
 			if err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: redis.Name}, redis); err != nil {
 				return err
 			}
-			if redis.Status.State != component.StateReady {
+			if redis.Status.ObservedGeneration != redis.Generation || redis.Status.State != component.StateReady {
 				return fmt.Errorf("again")
 			}
 			return nil
@@ -337,6 +337,13 @@ var _ = Describe("Deploy Redis", func() {
 		Expect(bindingSecret.Data).To(Equal(expectedSecretData))
 	})
 })
+
+func createNamepace() string {
+	namespace := &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{GenerateName: "ns-"}}
+	err := cli.Create(ctx, namespace)
+	Expect(err).NotTo(HaveOccurred())
+	return namespace.Name
+}
 
 // assemble validatingwebhookconfiguration descriptor
 func buildValidatingWebhookConfiguration() *admissionv1.ValidatingWebhookConfiguration {
@@ -369,13 +376,7 @@ func buildValidatingWebhookConfiguration() *admissionv1.ValidatingWebhookConfigu
 	}
 }
 
-func createNamepace(cli client.Client) string {
-	namespace := &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{GenerateName: "ns-"}}
-	err := cli.Create(ctx, namespace)
-	Expect(err).NotTo(HaveOccurred())
-	return namespace.Name
-}
-
+// convert rest.Config into kubeconfig
 func kubeConfigFromRestConfig(restConfig *rest.Config) *clientcmdapi.Config {
 	apiConfig := clientcmdapi.NewConfig()
 
