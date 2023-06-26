@@ -1,0 +1,23 @@
+{
+  "name": "determine-bump-level",
+  "version": "1.0.0",
+  "description": "Github Action to determine version bump level of GitHub release",
+  "main": "src/index.js",
+  "author": "SAP/CS-DevOps",
+  "scripts": {
+    "build": "ncc build src/index.js --license licenses.txt"
+  },
+  "licenses": [
+    {
+      "type": "Apache License, Version 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  ],
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "@octokit/rest": "^19.0.5",
+    "semver": "^7.3.8",
+    "shelljs": "^0.8.5"
+  }
+}

@@ -1,0 +1,82 @@
+name: Release Docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      version-bump:
+        description: 'Whether to bump major, minor or patch version'
+        # For exmaple:
+          # Bump major version (i.e. current_version=v1.2.3 --> new_version=v2.0.0)'
+          # Bump minor version (i.e. current_version=v1.2.3 --> new_version=v1.3.0)
+          # Bump patch version (i.e. current_version=v1.2.3 --> new_version=v1.2.4)
+        required: false
+        default: patch
+        type: choice
+        options:
+        - major
+        - minor
+        - patch
+      desired-version:
+        description: 'Version of docker image to be released'
+        required: false
+        default: ''
+      ref:
+        description: 'The branch, tag, or SHA to release'
+        required: false
+        default: 'main'
+
+env:
+  REGISTRY: ghcr.io
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  release:
+    name: Create release
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
+
+    - name: Get latest tag
+      uses: actions-ecosystem/action-get-latest-tag@v1
+      if: inputs.desired-version == ''
+      id: get-latest-tag
+      with:
+        semver_only: true
+        initial_version: 'v0.0.0'
+
+    - name: Bump version
+      uses: actions-ecosystem/action-bump-semver@v1
+      if: inputs.desired-version == ''
+      id: bump-semver
+      with:
+        current_version: ${{ steps.get-latest-tag.outputs.tag }}
+        level: ${{ inputs.version-bump }}
+
+    - name: Prepare version
+      id: prepare-version
+      run: |
+        if "${{ inputs.desired-version != '' }}"
+        then
+          echo "version=${{ inputs.desired-version }}" >> $GITHUB_OUTPUT
+        else
+          echo "version=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
+        fi 
+  
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.prepare-version.outputs.version }}
+        draft: false
+        prerelease: false
+        target_commitish: ${{ inputs.ref }}
+        token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
+        generate_release_notes: true

@@ -1,0 +1,20 @@
+name: 'Determine bump version level'
+description: 'Github Action to determine version bump level of GitHub release'
+inputs:
+  token:
+    description: 'Personal access token (PAT) used to fetch data via GitHub REST API'
+    required: true
+  inclusion-prefix:
+    description: 'Prefix of tags to be included (default: '')'
+    required: false
+    default: ''
+outputs:
+  bump-level:
+    description: 'Determined bump version level (major, minor, patch)'
+  latest-tag:
+    description: 'Latest release tag sorted by creatordate'
+  previous-tag:
+    description: 'Previous release tag sorted by creatordate'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
