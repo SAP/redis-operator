@@ -4,7 +4,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: redis-operator
 webhooks:
-- name: redis-operator.cs.sap.com
+- name: validate.redis.cache.cs.sap.com
   admissionReviewVersions:
   - v1
   clientConfig:
@@ -26,3 +26,4 @@ webhooks:
   sideEffects: None
   timeoutSeconds: 10
   failurePolicy: Fail
+  
