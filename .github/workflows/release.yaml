@@ -1,14 +1,10 @@
-name: Release Docker
+name: Trigger release
 
 on:
   workflow_dispatch:
     inputs:
       version-bump:
         description: 'Whether to bump major, minor or patch version'
-        # For exmaple:
-          # Bump major version (i.e. current_version=v1.2.3 --> new_version=v2.0.0)'
-          # Bump minor version (i.e. current_version=v1.2.3 --> new_version=v1.3.0)
-          # Bump patch version (i.e. current_version=v1.2.3 --> new_version=v1.2.4)
         required: false
         default: patch
         type: choice
@@ -17,16 +13,16 @@ on:
         - minor
         - patch
       desired-version:
-        description: 'Version of docker image to be released'
+        description: 'Version to be released; if specified, version-bump will be ignored'
         required: false
         default: ''
-      ref:
-        description: 'The branch, tag, or SHA to release'
-        required: false
-        default: 'main'
+
+concurrency: release
 
 env:
-  REGISTRY: ghcr.io
+  TAG_PREFIX: v
+  INITIAL_TAG: v0.1.0
+  SEMVER_VERSION: 3.4.0
 
 defaults:
   run:
@@ -34,49 +30,90 @@ defaults:
 
 jobs:
   release:
-    name: Create release
+    name: Trigger release
+    runs-on: ubuntu-22.04
     permissions:
       contents: write
-    runs-on: ubuntu-22.04
+
+    # TODO: ensure that github.ref is not refs/tags/*
+    # TODO: maybe even ensure that github.ref == refs/heads/main
     steps:
-    - name: Checkout
+    - name: Checkout repository
       uses: actions/checkout@v3
       with:
         token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
 
-    - name: Get latest tag
-      uses: actions-ecosystem/action-get-latest-tag@v1
-      if: inputs.desired-version == ''
-      id: get-latest-tag
+    - name: Setup semver
+      uses: ./.github/actions/setup-semver
       with:
-        semver_only: true
-        initial_version: 'v0.0.0'
+        version: ${{ env.SEMVER_VERSION }}
+        install-directory: ${{ runner.temp }}/bin
 
-    - name: Bump version
-      uses: actions-ecosystem/action-bump-semver@v1
-      if: inputs.desired-version == ''
-      id: bump-semver
+    - name: Determine current release
+      id: get_current_release
+      uses: ./.github/actions/get-highest-tag
       with:
-        current_version: ${{ steps.get-latest-tag.outputs.tag }}
-        level: ${{ inputs.version-bump }}
+        prefix: ${{ env.TAG_PREFIX }}
 
-    - name: Prepare version
-      id: prepare-version
+    - name: Determine target release
+      id: get_target_release
       run: |
-        if "${{ inputs.desired-version != '' }}"
-        then
-          echo "version=${{ inputs.desired-version }}" >> $GITHUB_OUTPUT
+        desired_version=${{ inputs.desired-version }}
+        current_version=${{ steps.get_current_release.outputs.version }}
+        version_bump=${{ inputs.version-bump }}
+
+        if [ -z "$desired_version" ]; then
+          case $version_bump in
+            major|minor|patch)
+              # ok
+              ;;
+            *)
+              >&1 echo "Invalid input: version-bump ($version_bump)."
+              exit 1
+          esac
+          if [ -z "$current_version" ]; then
+            version=${INITIAL_TAG/#$TAG_PREFIX/}
+            tag=$INITIAL_TAG
+          else
+            version=$(semver bump $version_bump $current_version)
+            tag=$TAG_PREFIX$version
+          fi
         else
-          echo "version=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
-        fi 
-  
+          if [[ $desired_version =~ ^$TAG_PREFIX([0-9].*)$ ]]; then
+            version=${BASH_REMATCH[1]}
+            tag=$desired_version
+          else
+            >&1 echo "Invalid input: desired-version ($desired_version) should start with $TAG_PREFIX."
+            exit 1
+          fi
+          if [ "$(semver validate $version)" != valid ]; then
+            >&1 echo "Invalid input: desired-version ($version) is not a valid semantic version."
+            exit 1
+          fi
+          if [ "$(semver compare $version $current_version)" -le 0 ]; then
+            >&1 echo "Invalid input: desired-version ($version) should be higher than current version ($current_version)."
+            exit 1
+          fi
+        fi
+
+        echo "Target version: $version"
+        echo "Target tag: $tag"
+        echo "version=$version" >> $GITHUB_OUTPUT
+        echo "tag=$tag" >> $GITHUB_OUTPUT
+
+    - name: Determine target commit
+      id: get_target_commit
+      run: |
+        sha=$(git rev-parse HEAD)
+        echo "Target commit: $sha"
+        echo "sha=$sha" >> $GITHUB_OUTPUT
+
     - name: Create Release
-      id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ steps.prepare-version.outputs.version }}
+        tag_name: ${{ steps.get_target_release.outputs.tag }}
         draft: false
         prerelease: false
-        target_commitish: ${{ inputs.ref }}
+        target_commitish: ${{ steps.get_target_commit.outputs.sha }}
         token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
-        generate_release_notes: true
+        generate_release_notes: false
