@@ -1,0 +1,13 @@
+name: Get highest tag
+description: Get highest semver tag in current repository
+inputs:
+  prefix:
+    description: Tag prefix (only tags with that prefix are considered)
+outputs:
+  tag:
+    description: Highest tag (according to semver ordering)
+  version:
+    description: Highest version (i.e. determined highest tag, stripped by prefix)
+runs:
+  using: node16
+  main: dist/index.js
