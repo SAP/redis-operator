@@ -1,7 +1,7 @@
 name: Setup helm-docs
 description: Setup helm-docs
 inputs:
-  version: 
+  version:
     description: Version
     required: true
     default: latest
