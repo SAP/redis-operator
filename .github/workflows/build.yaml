@@ -127,11 +127,9 @@ jobs:
     needs: test
     permissions:
       contents: read
-    env:
-      IMAGE_NAME: ${{ github.repository }}
     outputs:
       image-archive: image.tar
-      image-repository: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      image-repository: ${{ steps.prepare-repository-name.outputs.repository }}
       image-tag: ${{ steps.extract-metadata.outputs.version }}
 
     steps:
@@ -141,11 +139,17 @@ jobs:
     - name: Setup Docker Buildx
       uses: docker/setup-buildx-action@v2
 
+    - name: Prepare repository name
+      id: prepare-repository-name
+      run: |
+        repository=$REGISTRY/${{ github.repository }}
+        echo "repository=${repository,,}" >> $GITHUB_OUTPUT
+
     - name: Extract metadata (tags, labels) for Docker
       id: extract-metadata
       uses: docker/metadata-action@v4
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        images: ${{ steps.prepare-repository-name.outputs.repository }}
 
     - name: Build Docker image
       uses: docker/build-push-action@v4

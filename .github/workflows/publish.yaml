@@ -24,8 +24,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    env:
-      IMAGE_NAME: ${{ github.repository }}
 
     steps:
     - name: Checkout repository
@@ -41,11 +39,17 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ github.token }}
 
+    - name: Prepare repository name
+      id: prepare-repository-name
+      run: |
+        repository=$REGISTRY/${{ github.repository }}
+        echo "repository=${repository,,}" >> $GITHUB_OUTPUT
+
     - name: Extract metadata (tags, labels) for Docker
       id: extract-metadata
       uses: docker/metadata-action@v4
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        images: ${{ steps.prepare-repository-name.outputs.repository }}
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
@@ -94,8 +98,8 @@ jobs:
     - name: Build and push artifact
       run: |
         cd crds
-        repository=${{ github.repository }}/crds
-        tar cvz * | regctl artifact put -m application/gzip $REGISTRY/${repository,,}:${{ github.event.release.tag_name }}
+        repository=$REGISTRY/${{ github.repository }}/crds
+        tar cvz * | regctl artifact put -m application/gzip ${repository,,}:${{ github.event.release.tag_name }}
 
   update-chart:
     name: Update Helm chart
