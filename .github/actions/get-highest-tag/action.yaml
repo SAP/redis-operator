@@ -3,6 +3,7 @@ description: Get highest semver tag in current repository
 inputs:
   prefix:
     description: Tag prefix (only tags with that prefix are considered)
+    default: ''
 outputs:
   tag:
     description: Highest tag (according to semver ordering)

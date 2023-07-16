@@ -1,0 +1,45 @@
+name: Check Go license headers
+description: Check license headers of Go files
+inputs:
+  base-path:
+    description: Base directory
+    default: .
+  boilerplate-path:
+    description: License header file path
+    required: true
+runs:
+  using: composite
+  steps:
+  - name: Check files
+    shell: ruby {0}
+    env:
+      INPUT_BASE_PATH: ${{ inputs.base-path }}
+      INPUT_BOILERPLATE_PATH: ${{ inputs.boilerplate-path }}
+    run: |
+      base_path = ENV["INPUT_BASE_PATH"]
+      raise "Input parameter base-path must not start with slash" if base_path.start_with?("/")
+      raise "Input parameter base-path must not be empty" if base_path.empty?
+      raise "Specified base-path does not exist: #{base_path}" if !Dir.exists?(base_path)
+
+      boilerplate_path = ENV["INPUT_BOILERPLATE_PATH"]
+      raise "Input parameter boilerplate-path must not start with slash" if boilerplate_path.start_with?("/")
+      raise "Input parameter boilerplate-path must not be empty" if boilerplate_path.empty?
+
+      boilerplate = File.readlines(boilerplate_path)
+      errors = 0
+
+      Dir.glob("**/*.go").each do |p|
+        file = File.readlines(p)
+        file.each_with_index do |line,i|
+          next if line =~ /^\/\/go:build/
+          next if line =~ /^\/\/\s*\+build/
+          next if line =~ /^\s*$/
+          if file[i,boilerplate.size] != boilerplate then
+            STDERR.puts "#{p}: bad or missing license header"
+            errors += 1
+          end
+          break
+        end
+      end
+
+      exit 1 if errors > 0
