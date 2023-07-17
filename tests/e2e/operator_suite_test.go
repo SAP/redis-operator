@@ -14,6 +14,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -96,6 +97,7 @@ var cli client.Client
 var discoveryCli discovery.DiscoveryInterface
 var ctx context.Context
 var cancel context.CancelFunc
+var threads sync.WaitGroup
 var tmpdir string
 
 var _ = BeforeSuite(func() {
@@ -181,7 +183,9 @@ var _ = BeforeSuite(func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		By("starting manager")
+		threads.Add(1)
 		go func() {
+			defer threads.Done()
 			defer GinkgoRecover()
 			err := mgr.Start(ctx)
 			Expect(err).NotTo(HaveOccurred())
@@ -205,6 +209,7 @@ var _ = BeforeSuite(func() {
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")
 	cancel()
+	threads.Wait()
 	if testEnv != nil {
 		err := testEnv.Stop()
 		Expect(err).NotTo(HaveOccurred())
@@ -221,7 +226,7 @@ var _ = Describe("Deploy Redis", func() {
 	var namespace string
 
 	BeforeEach(func() {
-		namespace = createNamepace()
+		namespace = createNamespace()
 	})
 
 	AfterEach(func() {
@@ -315,7 +320,7 @@ var _ = Describe("Deploy Redis", func() {
 	})
 })
 
-func createNamepace() string {
+func createNamespace() string {
 	namespace := &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{GenerateName: "test-"}}
 	err := cli.Create(ctx, namespace)
 	Expect(err).NotTo(HaveOccurred())

@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"sync"
 	"testing"
 	"time"
 
@@ -34,6 +35,7 @@ import (
 	apiregistrationv1 "k8s.io/kube-aggregator/pkg/apis/apiregistration/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
@@ -52,6 +54,7 @@ var cfg *rest.Config
 var cli client.Client
 var ctx context.Context
 var cancel context.CancelFunc
+var threads sync.WaitGroup
 var tmpdir string
 
 var _ = BeforeSuite(func() {
@@ -111,7 +114,9 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 
 	By("starting dummy controller-manager")
+	threads.Add(1)
 	go func() {
+		defer threads.Done()
 		defer GinkgoRecover()
 		// since there is no controller-manager in envtest, we fake all statefulsets into a ready state
 		// such that kstatus recognizes them as 'Current'
@@ -124,29 +129,41 @@ var _ = BeforeSuite(func() {
 				err := cli.List(ctx, statefulSetList)
 				Expect(err).NotTo(HaveOccurred())
 				for _, statefulSet := range statefulSetList.Items {
-					status := &statefulSet.Status
-					oldStatus := status.DeepCopy()
-					status.ObservedGeneration = statefulSet.Generation
-					status.Replicas = *statefulSet.Spec.Replicas
-					status.ReadyReplicas = *statefulSet.Spec.Replicas
-					status.AvailableReplicas = *statefulSet.Spec.Replicas
-					status.CurrentReplicas = *statefulSet.Spec.Replicas
-					status.UpdatedReplicas = *statefulSet.Spec.Replicas
-					if reflect.DeepEqual(status, oldStatus) {
-						continue
+					if statefulSet.DeletionTimestamp.IsZero() {
+						status := &statefulSet.Status
+						oldStatus := status.DeepCopy()
+						status.ObservedGeneration = statefulSet.Generation
+						status.Replicas = *statefulSet.Spec.Replicas
+						status.ReadyReplicas = *statefulSet.Spec.Replicas
+						status.AvailableReplicas = *statefulSet.Spec.Replicas
+						status.CurrentReplicas = *statefulSet.Spec.Replicas
+						status.UpdatedReplicas = *statefulSet.Spec.Replicas
+						if reflect.DeepEqual(status, oldStatus) {
+							continue
+						}
+						err = cli.Status().Update(ctx, &statefulSet)
+						if apierrors.IsNotFound(err) || apierrors.IsConflict(err) {
+							err = nil
+						}
+						Expect(err).NotTo(HaveOccurred())
+					} else {
+						if controllerutil.RemoveFinalizer(&statefulSet, metav1.FinalizerDeleteDependents) {
+							err = cli.Update(ctx, &statefulSet)
+							if apierrors.IsNotFound(err) || apierrors.IsConflict(err) {
+								err = nil
+							}
+							Expect(err).NotTo(HaveOccurred())
+						}
 					}
-					err = cli.Status().Update(ctx, &statefulSet)
-					if apierrors.IsNotFound(err) || apierrors.IsConflict(err) {
-						err = nil
-					}
-					Expect(err).NotTo(HaveOccurred())
 				}
 			}
 		}
 	}()
 
 	By("starting manager")
+	threads.Add(1)
 	go func() {
+		defer threads.Done()
 		defer GinkgoRecover()
 		err := mgr.Start(ctx)
 		Expect(err).NotTo(HaveOccurred())
@@ -159,6 +176,7 @@ var _ = BeforeSuite(func() {
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")
 	cancel()
+	threads.Wait()
 	err := testEnv.Stop()
 	Expect(err).NotTo(HaveOccurred())
 	err = os.RemoveAll(tmpdir)
@@ -169,7 +187,7 @@ var _ = Describe("Deploy Redis", func() {
 	var namespace string
 
 	BeforeEach(func() {
-		namespace = createNamepace()
+		namespace = createNamespace()
 	})
 
 	It("should deploy Redis with one master and zero read replicas, with TLS disabled", func() {
@@ -338,7 +356,7 @@ var _ = Describe("Deploy Redis", func() {
 	})
 })
 
-func createNamepace() string {
+func createNamespace() string {
 	namespace := &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{GenerateName: "ns-"}}
 	err := cli.Create(ctx, namespace)
 	Expect(err).NotTo(HaveOccurred())
