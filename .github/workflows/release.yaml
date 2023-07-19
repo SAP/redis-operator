@@ -126,3 +126,4 @@ jobs:
         target_commitish: ${{ steps.get_target_commit.outputs.sha }}
         token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
         generate_release_notes: false
+
