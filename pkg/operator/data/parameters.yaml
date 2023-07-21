@@ -172,14 +172,8 @@ networkPolicy:
   enabled: true
   extraEgress:
   - ports:
-    - port: 53
-      protocol: UDP
-    - port: 53
-      protocol: TCP
-    - port: 8053
-      protocol: UDP
-    - port: 8053
-      protocol: TCP
+    - protocol: UDP
+    - protocol: TCP
 
 extraDeploy:
 - apiVersion: v1
