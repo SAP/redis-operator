@@ -146,13 +146,13 @@ jobs:
 
         old_version=$(yq .appVersion $chart_directory/Chart.yaml)
         if [ "${old_version:0:1}" != v ] || [ "$(semver validate $old_version)" != valid ]; then
-          >&1 echo "Found invalid current appVersion ($old_version) in $chart_directory/Chart.yaml)."
+          >&2 echo "Found invalid current appVersion ($old_version) in $chart_directory/Chart.yaml)."
           exit 1
         fi
 
         new_version=${{ github.event.release.tag_name }}
         if [ "${new_version:0:1}" != v ] || [ "$(semver validate $new_version)" != valid ]; then
-          >&1 echo "Invalid target appVersion ($new_version)."
+          >&2 echo "Invalid target appVersion ($new_version)."
           exit 1
         fi
 
@@ -192,6 +192,9 @@ jobs:
         git push
 
         echo "version_bump=$version_bump" >> $GITHUB_OUTPUT
+
+        # add some safety sleep to overcome github race conditions
+        sleep 10s
 
     - name: Release chart repository
       if: steps.update.outputs.version_bump != ''

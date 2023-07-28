@@ -35,9 +35,14 @@ jobs:
     permissions:
       contents: write
 
-    # TODO: ensure that github.ref is not refs/tags/*
-    # TODO: maybe even ensure that github.ref == refs/heads/main
     steps:
+    - name: Validate ref
+      run: |
+        if [ "${{ github.ref }}" != refs/heads/main ]; then
+          >&2 echo "Invalid ref: ${{ github.ref }} (expected: refs/heads/main)"
+          exit 1
+        fi
+
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
@@ -68,7 +73,7 @@ jobs:
               # ok
               ;;
             *)
-              >&1 echo "Invalid input: version-bump ($version_bump)."
+              >&2 echo "Invalid input: version-bump ($version_bump)."
               exit 1
           esac
           if [ -z "$current_version" ]; then
@@ -83,15 +88,15 @@ jobs:
             version=${BASH_REMATCH[1]}
             tag=$desired_version
           else
-            >&1 echo "Invalid input: desired-version ($desired_version) should start with $TAG_PREFIX."
+            >&2 echo "Invalid input: desired-version ($desired_version) should start with $TAG_PREFIX."
             exit 1
           fi
           if [ "$(semver validate $version)" != valid ]; then
-            >&1 echo "Invalid input: desired-version ($version) is not a valid semantic version."
+            >&2 echo "Invalid input: desired-version ($version) is not a valid semantic version."
             exit 1
           fi
           if [ "$(semver compare $version $current_version)" -le 0 ]; then
-            >&1 echo "Invalid input: desired-version ($version) should be higher than current version ($current_version)."
+            >&2 echo "Invalid input: desired-version ($version) should be higher than current version ($current_version)."
             exit 1
           fi
         fi
