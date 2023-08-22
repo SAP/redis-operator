@@ -20,6 +20,12 @@
       "allowedVersions": "<1.4.0"
     },
     {
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "rangeStrategy": "bump"
+    },
+    {
       "matchUpdateTypes": [
         "patch",
         "pin",
