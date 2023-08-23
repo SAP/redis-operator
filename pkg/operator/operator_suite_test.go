@@ -126,7 +126,7 @@ var _ = BeforeSuite(func() {
 				return
 			case <-time.After(100 * time.Millisecond):
 				statefulSetList := &appsv1.StatefulSetList{}
-				err := cli.List(ctx, statefulSetList)
+				err := cli.List(context.Background(), statefulSetList)
 				Expect(err).NotTo(HaveOccurred())
 				for _, statefulSet := range statefulSetList.Items {
 					if statefulSet.DeletionTimestamp.IsZero() {
@@ -141,14 +141,14 @@ var _ = BeforeSuite(func() {
 						if reflect.DeepEqual(status, oldStatus) {
 							continue
 						}
-						err = cli.Status().Update(ctx, &statefulSet)
+						err = cli.Status().Update(context.Background(), &statefulSet)
 						if apierrors.IsNotFound(err) || apierrors.IsConflict(err) {
 							err = nil
 						}
 						Expect(err).NotTo(HaveOccurred())
 					} else {
 						if controllerutil.RemoveFinalizer(&statefulSet, metav1.FinalizerDeleteDependents) {
-							err = cli.Update(ctx, &statefulSet)
+							err = cli.Update(context.Background(), &statefulSet)
 							if apierrors.IsNotFound(err) || apierrors.IsConflict(err) {
 								err = nil
 							}
