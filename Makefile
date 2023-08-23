@@ -121,5 +121,6 @@ $(SETUP_ENVTEST): $(LOCALBIN)
 .PHONY: envtest
 envtest: setup-envtest
 	ENVTESTDIR=$$($(SETUP_ENVTEST) use $(ENVTEST_K8S_VERSION) --bin-dir $(LOCALBIN) -p path) ;\
+	chmod -R u+w $$ENVTESTDIR ;\
 	rm -f $(LOCALBIN)/k8s/current ;\
 	ln -s $$ENVTESTDIR $(LOCALBIN)/k8s/current
