@@ -24,11 +24,8 @@ manifests: controller-gen ## Generate CustomResourceDefinition objects.
 	test ! -d chart || test -e chart/crds || ln -s ../crds chart/crds
 
 .PHONY: generate
-generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+generate: controller-gen client-gen informer-gen lister-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations, and generate typed client.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./api/..."
-
-.PHONY: generate-client
-generate-client: client-gen informer-gen lister-gen ## Generate typed client.
 	./hack/genclient.sh
 
 .PHONY: fmt
@@ -89,8 +86,8 @@ LISTER_GEN ?= $(LOCALBIN)/lister-gen
 SETUP_ENVTEST ?= $(LOCALBIN)/setup-envtest
 
 ## Tool Versions
-CONTROLLER_TOOLS_VERSION ?= v0.9.2
-CODE_GENERATOR_VERSION ?= v0.27.3
+CONTROLLER_TOOLS_VERSION ?= v0.13.0
+CODE_GENERATOR_VERSION ?= v0.28.1
 SETUP_ENVTEST_VERSION ?= latest
 
 .PHONY: controller-gen
