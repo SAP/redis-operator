@@ -106,7 +106,7 @@ var _ = BeforeSuite(func() {
 	var err error
 
 	if kubeconfig == "" && kind == "" {
-		Fail("at least one of --kubeconfig or --kind has to be provided")
+		Fail("No kubeconfig provided, and no kind executable was provided or found in the path")
 	}
 
 	By("initializing")
