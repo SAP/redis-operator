@@ -74,7 +74,8 @@ master:
     size: {{ . }}
     {{- end }}
     {{- end }}
-  {{- if .sidecars and .sentinel.enabled}}
+  {{- if .sidecars and .sentinel.enabled }}
+  sidecars:
   {{- with .sidecars }}
       {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -121,7 +122,8 @@ replica:
   containerSecurityContext:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if .sidecars and (not .sentinel.enabled)}}
+  {{- if .sidecars and (not .sentinel.enabled) }}
+  sidecars:
   {{- with .sidecars }}
       {{- toYaml . | nindent 4 }}
   {{- end }}
