@@ -74,6 +74,11 @@ master:
     size: {{ . }}
     {{- end }}
     {{- end }}
+  {{- if .sidecars and .sentinel.enabled}}
+  {{- with .sidecars }}
+      {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
 
 replica:
   replicaCount: {{ ternary .replicas (max (sub .replicas 1) 0) $sentinelEnabled }}
@@ -116,6 +121,13 @@ replica:
   containerSecurityContext:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- if .sidecars and (not .sentinel.enabled)}}
+  {{- with .sidecars }}
+      {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+
+
   persistence:
     enabled: {{ $persistenceEnabled }}
     {{- if $persistenceEnabled }}
