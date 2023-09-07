@@ -10,6 +10,7 @@ SPDX-License-Identifier: Apache-2.0
 package v1alpha1
 
 import (
+	"k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -168,6 +169,13 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 	*out = *in
 	in.KubernetesPodProperties.DeepCopyInto(&out.KubernetesPodProperties)
 	in.KubernetesContainerProperties.DeepCopyInto(&out.KubernetesContainerProperties)
+	if in.Sidecars != nil {
+		in, out := &in.Sidecars, &out.Sidecars
+		*out = make([]v1.Container, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	if in.Sentinel != nil {
 		in, out := &in.Sentinel, &out.Sentinel
 		*out = new(SentinelProperties)

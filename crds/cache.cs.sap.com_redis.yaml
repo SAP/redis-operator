@@ -3254,8 +3254,6 @@ spec:
                 type: array
               version:
                 type: string
-            required:
-            - sidecars
             type: object
           status:
             default:

@@ -23,7 +23,7 @@ type RedisSpec struct {
 	Replicas                                int `json:"replicas,omitempty"`
 	component.KubernetesPodProperties       `json:",inline"`
 	component.KubernetesContainerProperties `json:",inline"`
-	Sidecars                                []apiv1.Container      `json:"sidecars"`
+	Sidecars                                []apiv1.Container      `json:"sidecars,omitempty"`
 	Sentinel                                *SentinelProperties    `json:"sentinel,omitempty"`
 	Metrics                                 *MetricsProperties     `json:"metrics,omitempty"`
 	TLS                                     *TLSProperties         `json:"tls,omitempty"`
