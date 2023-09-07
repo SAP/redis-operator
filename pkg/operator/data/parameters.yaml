@@ -1,4 +1,3 @@
-
 {{- $fullname := (printf "redis-%s" .Name) }}
 
 fullnameOverride: {{ $fullname }}
@@ -74,11 +73,9 @@ master:
     size: {{ . }}
     {{- end }}
     {{- end }}
-  {{- if .sidecars and .sentinel.enabled }}
   sidecars:
   {{- with .sidecars }}
       {{- toYaml . | nindent 4 }}
-  {{- end }}
   {{- end }}
 
 replica:
@@ -122,14 +119,6 @@ replica:
   containerSecurityContext:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if .sidecars and (not .sentinel.enabled) }}
-  sidecars:
-  {{- with .sidecars }}
-      {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{- end }}
-
-
   persistence:
     enabled: {{ $persistenceEnabled }}
     {{- if $persistenceEnabled }}
@@ -141,6 +130,11 @@ replica:
 {{- if $sentinelEnabled }}
 sentinel:
   enabled: true
+replica:
+  sidecars:
+  {{- with .sidecars }}
+      {{- toYaml . | nindent 4 }}
+  {{- end }}  
   {{- with .Version }}
   image:
     tag: {{ . }}
