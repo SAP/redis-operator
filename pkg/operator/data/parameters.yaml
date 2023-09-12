@@ -73,11 +73,19 @@ master:
     size: {{ . }}
     {{- end }}
     {{- end }}
+  {{- if .persistence.extraVolumes }}
+  extraVolumes: 
+  {{- with .persistence.extraVolumes }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }} 
+  {{- end }}
+  {{- if .sidecars }}
   sidecars:
   {{- with .sidecars }}
-      {{- toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
-
+  {{- end }}   
+  
 replica:
   replicaCount: {{ ternary .replicas (max (sub .replicas 1) 0) $sentinelEnabled }}
   {{- with .nodeSelector }}
