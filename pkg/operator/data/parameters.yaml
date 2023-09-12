@@ -126,15 +126,22 @@ replica:
     size: {{ . }}
     {{- end }}
     {{- end }}
+  {{- if .persistence.extraVolumes }}
+  extraVolumes: 
+  {{- with .persistence.extraVolumes }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }} 
+  {{- end }}
+  {{- if .sidecars }}
+  sidecars:
+  {{- with .sidecars }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}   
 
 {{- if $sentinelEnabled }}
 sentinel:
   enabled: true
-replica:
-  sidecars:
-  {{- with .sidecars }}
-      {{- toYaml . | nindent 4 }}
-  {{- end }}  
   {{- with .Version }}
   image:
     tag: {{ . }}

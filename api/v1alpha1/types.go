@@ -66,6 +66,7 @@ type PersistenceProperties struct {
 	Enabled      bool               `json:"enabled,omitempty"`
 	Size         *resource.Quantity `json:"size,omitempty"`
 	StorageClass string             `json:"storageClass,omitempty"`
+	ExtraVolumes []apiv1.Volume     `json:"extraVolumes,omitempty"`
 }
 
 // BindingProperties models custom properties for the generated binding secret
