@@ -73,11 +73,13 @@ master:
     size: {{ . }}
     {{- end }}
     {{- end }}
+  {{- if .persistence }}
   {{- if .persistence.extraVolumes }}
   extraVolumes: 
   {{- with .persistence.extraVolumes }}
     {{- toYaml . | nindent 4 }}
-  {{- end }} 
+  {{- end }}
+  {{- end }}
   {{- end }}
   {{- if .sidecars }}
   sidecars:
@@ -134,10 +136,12 @@ replica:
     size: {{ . }}
     {{- end }}
     {{- end }}
+  {{- if .persistence }}
   {{- if .persistence.extraVolumes }}
   extraVolumes: 
   {{- with .persistence.extraVolumes }}
     {{- toYaml . | nindent 4 }}
+  {{- end }} 
   {{- end }} 
   {{- end }}
   {{- if .sidecars }}
