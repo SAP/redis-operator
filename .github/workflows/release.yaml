@@ -17,6 +17,10 @@ on:
         required: false
         default: ''
 
+  schedule:
+    - cron: '10 7 * * 1'
+    - cron: '10 8 * * 1'
+
 concurrency: trigger-release
 
 env:
@@ -44,7 +48,7 @@ jobs:
         fi
 
     - name: Checkout repository
-      uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+      uses: actions/checkout@v4
       with:
         token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
 
@@ -60,12 +64,31 @@ jobs:
       with:
         prefix: ${{ env.TAG_PREFIX }}
 
+    - name: Get number of commits since current release
+      id: commits
+      if: github.event_name == 'schedule'
+      run: |
+        git fetch --tags
+        echo "count=$(git rev-list --count --no-merges ${{ steps.get_current_release.outputs.tag }}..HEAD --before=1.hour)" >> $GITHUB_OUTPUT
+
     - name: Determine target release
       id: get_target_release
       run: |
+        create_release=true
         desired_version=${{ inputs.desired-version }}
         current_version=${{ steps.get_current_release.outputs.version }}
-        version_bump=${{ inputs.version-bump }}
+
+        if "${{ github.event_name == 'schedule' }}"; then
+          version_bump=patch
+          commits_count=${{ steps.commits.outputs.count }}
+
+          if [[ $commits_count -eq 0 ]]; then
+            create_release=false
+            >&2 echo "There are no commits since latest release found, nothing to do."
+          fi
+        else
+          version_bump=${{ inputs.version-bump }}
+        fi
 
         if [ -z "$desired_version" ]; then
           case $version_bump in
@@ -103,10 +126,13 @@ jobs:
 
         echo "Target version: $version"
         echo "Target tag: $tag"
+        echo "Create release: $create_release"
         echo "version=$version" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
+        echo "create_release=$create_release" >> $GITHUB_OUTPUT
 
     - name: Determine target commit
+      if: steps.get_target_release.outputs.create_release == 'true'
       id: get_target_commit
       run: |
         sha=$(git rev-parse HEAD)
@@ -114,6 +140,7 @@ jobs:
         echo "sha=$sha" >> $GITHUB_OUTPUT
 
     - name: Wait for check suites to complete
+      if: steps.get_target_release.outputs.create_release == 'true'
       uses: sap-contributions/await-check-suites@master
       with:
         ref: ${{ steps.get_target_commit.outputs.sha }}
@@ -123,12 +150,9 @@ jobs:
         appSlugFilter: github-actions
 
     - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: ${{ steps.get_target_release.outputs.tag }}
-        draft: false
-        prerelease: false
-        target_commitish: ${{ steps.get_target_commit.outputs.sha }}
-        token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
-        generate_release_notes: false
-
+      if: steps.get_target_release.outputs.create_release == 'true'
+      env:
+        GH_TOKEN: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
+      run: |
+        gh release create ${{ steps.get_target_release.outputs.tag }} \
+          --target "${{ steps.get_target_commit.outputs.sha }}"
