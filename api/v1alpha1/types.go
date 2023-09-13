@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 package v1alpha1
 
 import (
-	apiv1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -23,7 +23,7 @@ type RedisSpec struct {
 	Replicas                                int `json:"replicas,omitempty"`
 	component.KubernetesPodProperties       `json:",inline"`
 	component.KubernetesContainerProperties `json:",inline"`
-	Sidecars                                []apiv1.Container      `json:"sidecars,omitempty"`
+	Sidecars                                []corev1.Container     `json:"sidecars,omitempty"`
 	Sentinel                                *SentinelProperties    `json:"sentinel,omitempty"`
 	Metrics                                 *MetricsProperties     `json:"metrics,omitempty"`
 	TLS                                     *TLSProperties         `json:"tls,omitempty"`
@@ -66,7 +66,7 @@ type PersistenceProperties struct {
 	Enabled      bool               `json:"enabled,omitempty"`
 	Size         *resource.Quantity `json:"size,omitempty"`
 	StorageClass string             `json:"storageClass,omitempty"`
-	ExtraVolumes []apiv1.Volume     `json:"extraVolumes,omitempty"`
+	ExtraVolumes []corev1.Volume    `json:"extraVolumes,omitempty"`
 }
 
 // BindingProperties models custom properties for the generated binding secret
