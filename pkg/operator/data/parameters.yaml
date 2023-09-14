@@ -74,8 +74,8 @@ master:
     {{- end }}
     {{- end }}
   {{- if .persistence }}
-  extraVolumes: 
   {{- with .persistence.extraVolumes }}
+  extraVolumes: 
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- end }}
@@ -135,11 +135,9 @@ replica:
     {{- end }}
     {{- end }}
   {{- if .persistence }}
-  {{- if .persistence.extraVolumes }}
-  extraVolumes: 
   {{- with .persistence.extraVolumes }}
+  extraVolumes: 
     {{- toYaml . | nindent 4 }}
-  {{- end }} 
   {{- end }} 
   {{- end }}
   {{- if .sidecars }}
