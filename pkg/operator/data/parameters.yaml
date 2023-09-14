@@ -73,7 +73,7 @@ master:
     size: {{ . }}
     {{- end }}
     {{- end }}
-  {{- if .persistence.extraVolumes }}
+  {{- if .persistence }}
   extraVolumes: 
   {{- with .persistence.extraVolumes }}
     {{- toYaml . | nindent 4 }}
