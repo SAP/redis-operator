@@ -9,7 +9,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.12.1
 	github.com/onsi/gomega v1.27.10
 	github.com/pkg/errors v0.9.1
-	github.com/redis/go-redis/v9 v9.1.0
+	github.com/redis/go-redis/v9 v9.2.0
 	github.com/sap/admission-webhook-runtime v0.1.3
 	github.com/sap/component-operator-runtime v0.1.11
 	github.com/sap/go-generics v0.1.4
