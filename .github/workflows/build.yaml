@@ -33,12 +33,12 @@ jobs:
         go-version-file: go.mod
 
     - name: Check that license header boilerplate is correct
-      uses: ./.github/actions/check-go-license-boilerplate
+      uses: sap/cs-actions/check-go-license-boilerplate@main
       with:
         boilerplate-path: hack/boilerplate.go.txt
 
     - name: Check that license headers are correct
-      uses: ./.github/actions/check-go-license-headers
+      uses: sap/cs-actions/check-go-license-headers@main
       with:
         boilerplate-path: hack/boilerplate.go.txt
 
