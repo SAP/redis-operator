@@ -133,7 +133,7 @@ jobs:
         token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
 
     - name: Setup semver
-      uses: ./.github/actions/setup-semver
+      uses: sap/cs-actions/setup-semver@main
       with:
         version: ${{ env.SEMVER_VERSION }}
         install-directory: ${{ runner.temp }}/bin

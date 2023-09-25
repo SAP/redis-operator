@@ -6,13 +6,13 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/cert-manager/cert-manager v1.13.0
 	github.com/google/uuid v1.3.1
-	github.com/onsi/ginkgo/v2 v2.12.0
+	github.com/onsi/ginkgo/v2 v2.12.1
 	github.com/onsi/gomega v1.27.10
 	github.com/pkg/errors v0.9.1
-	github.com/redis/go-redis/v9 v9.1.0
-	github.com/sap/admission-webhook-runtime v0.1.2
-	github.com/sap/component-operator-runtime v0.1.10
-	github.com/sap/go-generics v0.1.3
+	github.com/redis/go-redis/v9 v9.2.0
+	github.com/sap/admission-webhook-runtime v0.1.3
+	github.com/sap/component-operator-runtime v0.1.11
+	github.com/sap/go-generics v0.1.4
 	golang.org/x/mod v0.12.0
 	k8s.io/api v0.28.2
 	k8s.io/apiextensions-apiserver v0.28.2
