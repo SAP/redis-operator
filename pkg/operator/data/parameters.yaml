@@ -1,4 +1,3 @@
-
 {{- $fullname := (printf "redis-%s" .Name) }}
 
 fullnameOverride: {{ $fullname }}
@@ -74,7 +73,19 @@ master:
     size: {{ . }}
     {{- end }}
     {{- end }}
-
+  {{- if .persistence }}
+  {{- with .persistence.extraVolumes }}
+  extraVolumes: 
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+  {{- if .sidecars }}
+  sidecars:
+  {{- with .sidecars }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}   
+  
 replica:
   replicaCount: {{ ternary .replicas (max (sub .replicas 1) 0) $sentinelEnabled }}
   {{- with .nodeSelector }}
@@ -123,6 +134,18 @@ replica:
     size: {{ . }}
     {{- end }}
     {{- end }}
+  {{- if .persistence }}
+  {{- with .persistence.extraVolumes }}
+  extraVolumes: 
+    {{- toYaml . | nindent 4 }}
+  {{- end }} 
+  {{- end }}
+  {{- if .sidecars }}
+  sidecars:
+  {{- with .sidecars }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}   
 
 {{- if $sentinelEnabled }}
 sentinel:
