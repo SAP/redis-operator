@@ -34,6 +34,8 @@ github.com/cert-manager/cert-manager v1.13.0 h1:P9rWfCgzr2wjpQcZtG5iWdQsOJgpHNwR
 github.com/cert-manager/cert-manager v1.13.0/go.mod h1:AHwJ0l63L2EoD2G5qz3blEd+8boZcqgWf6dBFA4kZbc=
 github.com/cert-manager/cert-manager v1.13.1 h1:hRST6l3G/Y3IDnn3H4zb6unDrZmtTPqaaz3TTGgfXNE=
 github.com/cert-manager/cert-manager v1.13.1/go.mod h1:pJe/sqGZ6yX0kYcsAv3e2EQH+xn8Ag8WOLGl/qYWAps=
+github.com/cert-manager/cert-manager v1.13.2 h1:LG8+OLvxtc49CSyfjW7zHSyvlt7JVaHgRGyhfdvPpkk=
+github.com/cert-manager/cert-manager v1.13.2/go.mod h1:AdfSU8muS+bj3C46YaD1VrlpXh672z5MeW/k1k5Sl1w=
 github.com/cespare/xxhash/v2 v2.2.0 h1:DC2CZ1Ep5Y4k3ZQ899DldepgrayRUGE6BBZ/cd9Cj44=
 github.com/cespare/xxhash/v2 v2.2.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
@@ -70,6 +72,8 @@ github.com/go-errors/errors v1.4.2/go.mod h1:sIVyrIiJhuEF+Pj9Ebtd6P/rEYROXFi3Bop
 github.com/go-logr/logr v1.2.0/go.mod h1:jdQByPbusPIv2/zmleS9BjJVeZ6kBagPoEUsqbVz/1A=
 github.com/go-logr/logr v1.2.4 h1:g01GSCwiDw2xSZfjJ2/T9M+S6pFdcNtFYsp+Y43HYDQ=
 github.com/go-logr/logr v1.2.4/go.mod h1:jdQByPbusPIv2/zmleS9BjJVeZ6kBagPoEUsqbVz/1A=
+github.com/go-logr/logr v1.3.0 h1:2y3SDp0ZXuc6/cjLSZ+Q3ir+QB9T/iG5yYRXqsagWSY=
+github.com/go-logr/logr v1.3.0/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
 github.com/go-logr/stdr v1.2.2 h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=
 github.com/go-logr/stdr v1.2.2/go.mod h1:mMo/vtBO5dYbehREoey6XUKy/eSumjCCveDpRre4VKE=
 github.com/go-logr/zapr v1.2.4 h1:QHVo+6stLbfJmYGkQ7uGHUCu5hnAFAj6mDe6Ea0SeOo=
@@ -213,6 +217,8 @@ github.com/sap/admission-webhook-runtime v0.1.6 h1:1tb9oyyRJFplYnBV7VFH9H1XqtmrO
 github.com/sap/admission-webhook-runtime v0.1.6/go.mod h1:4CI97F9WoYvj9xpKym52Q67bC655LXMNn1B6mBDGqKA=
 github.com/sap/admission-webhook-runtime v0.1.7 h1:rZkj5NGX/ysXGW4ZOgVKGCy8M4ZYr+B1jqvIPCawn1w=
 github.com/sap/admission-webhook-runtime v0.1.7/go.mod h1:FWp2xQHxzfpCVDxrg9TffzeraT4exhP3oCv1ln7fsN0=
+github.com/sap/admission-webhook-runtime v0.1.8 h1:W99nDuVy4S1skwJdEwsOJyO7uMkVKaoM+e7ibxHAaNI=
+github.com/sap/admission-webhook-runtime v0.1.8/go.mod h1:7FvjXBBwO9Qn6F/eeI6GaBYPygAFITzn6rD7EzL8EEA=
 github.com/sap/component-operator-runtime v0.1.8 h1:fmuoLDzaR9B5TG7CentqTIVtVlzqejJLet0SoFrm054=
 github.com/sap/component-operator-runtime v0.1.8/go.mod h1:Zk1pQlvYpiG7jEn8eN72vVmDOXiYW2ycL6+qzlmmEHA=
 github.com/sap/component-operator-runtime v0.1.9 h1:fn3UuS+nD3WnEeNK4HgFjCGGSqQb5XITZxVE5rhVPgM=
@@ -229,6 +235,8 @@ github.com/sap/component-operator-runtime v0.1.14 h1:+R1qGVGwnX8diugWyCWP7rM4Oga
 github.com/sap/component-operator-runtime v0.1.14/go.mod h1:Odf9gHhM82Yr/zKgLqrZWQHN9uqQH3/f1lDcKU+vRiE=
 github.com/sap/component-operator-runtime v0.1.15 h1:aQMCx7os6PH10yeDya+WNG/UIbwMChOmyArowxMI6Qs=
 github.com/sap/component-operator-runtime v0.1.15/go.mod h1:VF9D1hOfpRpXPNgnzymEbpTDy6pgb7OqWQ/j8IA+0oo=
+github.com/sap/component-operator-runtime v0.1.16 h1:oN6DmNajUO/LybhX16LsKDYSwfKkRiOf5Hix925ultU=
+github.com/sap/component-operator-runtime v0.1.16/go.mod h1:VF9D1hOfpRpXPNgnzymEbpTDy6pgb7OqWQ/j8IA+0oo=
 github.com/sap/go-generics v0.1.1 h1:3T4McSGF5epH8Yp4bbxD07oa5J0pH7Nfx4r4zwdsr4o=
 github.com/sap/go-generics v0.1.1/go.mod h1:8L5jyDKi/FHKG/R+qwyy9h1TymA7XO5YSu+J/27gTCg=
 github.com/sap/go-generics v0.1.2 h1:b8N97g3B49z3DzednuA+7pp6jJHy9RtUtm26/c3J3Is=

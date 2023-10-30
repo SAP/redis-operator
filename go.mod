@@ -4,14 +4,14 @@ go 1.21
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.3
-	github.com/cert-manager/cert-manager v1.13.1
+	github.com/cert-manager/cert-manager v1.13.2
 	github.com/google/uuid v1.4.0
 	github.com/onsi/ginkgo/v2 v2.13.0
 	github.com/onsi/gomega v1.29.0
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.2.1
-	github.com/sap/admission-webhook-runtime v0.1.7
-	github.com/sap/component-operator-runtime v0.1.15
+	github.com/sap/admission-webhook-runtime v0.1.8
+	github.com/sap/component-operator-runtime v0.1.16
 	github.com/sap/go-generics v0.1.5
 	golang.org/x/mod v0.13.0
 	k8s.io/api v0.28.3
@@ -35,7 +35,7 @@ require (
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-logr/zapr v1.2.4 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
