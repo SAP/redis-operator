@@ -7,7 +7,7 @@ require (
 	github.com/cert-manager/cert-manager v1.13.2
 	github.com/google/uuid v1.4.0
 	github.com/onsi/ginkgo/v2 v2.13.0
-	github.com/onsi/gomega v1.29.0
+	github.com/onsi/gomega v1.30.0
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.3.0
 	github.com/sap/admission-webhook-runtime v0.1.8
