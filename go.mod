@@ -1,6 +1,6 @@
 module github.com/sap/redis-operator
 
-go 1.21.3
+go 1.21.4
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.3
