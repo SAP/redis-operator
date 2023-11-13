@@ -225,6 +225,8 @@ github.com/sap/admission-webhook-runtime v0.1.7 h1:rZkj5NGX/ysXGW4ZOgVKGCy8M4ZYr
 github.com/sap/admission-webhook-runtime v0.1.7/go.mod h1:FWp2xQHxzfpCVDxrg9TffzeraT4exhP3oCv1ln7fsN0=
 github.com/sap/admission-webhook-runtime v0.1.8 h1:W99nDuVy4S1skwJdEwsOJyO7uMkVKaoM+e7ibxHAaNI=
 github.com/sap/admission-webhook-runtime v0.1.8/go.mod h1:7FvjXBBwO9Qn6F/eeI6GaBYPygAFITzn6rD7EzL8EEA=
+github.com/sap/admission-webhook-runtime v0.1.9 h1:UL/hLSC6E1Vo3Qb5wsZyw/0QOrqDBzBasrluo/evbdA=
+github.com/sap/admission-webhook-runtime v0.1.9/go.mod h1:2h3k9XMJr5J+LTNIw/GjeqNXEAjNQz/BhurVdFDgQco=
 github.com/sap/component-operator-runtime v0.1.8 h1:fmuoLDzaR9B5TG7CentqTIVtVlzqejJLet0SoFrm054=
 github.com/sap/component-operator-runtime v0.1.8/go.mod h1:Zk1pQlvYpiG7jEn8eN72vVmDOXiYW2ycL6+qzlmmEHA=
 github.com/sap/component-operator-runtime v0.1.9 h1:fn3UuS+nD3WnEeNK4HgFjCGGSqQb5XITZxVE5rhVPgM=
@@ -253,6 +255,8 @@ github.com/sap/go-generics v0.1.4 h1:Zu8uGtd4uVAznN3HfuSP4KseKJAkvkKFKWsBIjReqPI
 github.com/sap/go-generics v0.1.4/go.mod h1:AEKGOLA8ZRlFfqnUnx/XcZbPRfBW5jZ9B4tszghrJkg=
 github.com/sap/go-generics v0.1.5 h1:LYyDv0EBpoaTi9r4FOAHEBS59zC9q4lXKti7CjTzoj4=
 github.com/sap/go-generics v0.1.5/go.mod h1:AEKGOLA8ZRlFfqnUnx/XcZbPRfBW5jZ9B4tszghrJkg=
+github.com/sap/go-generics v0.1.6 h1:zaEi6QhoTWJgSwVVvQWmSzSwevwe3PDPc5Yyb2iZLM8=
+github.com/sap/go-generics v0.1.6/go.mod h1:FMXIRqp+DCL5tEaRRQixHyMrDWfqntQYVPTNo9vaizw=
 github.com/sergi/go-diff v1.1.0 h1:we8PVUC3FE2uYfodKH/nBHMSetSfHDR6scGdBi+erh0=
 github.com/sergi/go-diff v1.1.0/go.mod h1:STckp+ISIX8hZLjrqAeVduY0gWCT9IjLuqbuNXdaHfM=
 github.com/shopspring/decimal v1.2.0 h1:abSATXmQEYyShuxI4/vyW3tV1MrKAJzCZ/0zLUXYbsQ=
