@@ -11,7 +11,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.3.0
 	github.com/sap/admission-webhook-runtime v0.1.10
-	github.com/sap/component-operator-runtime v0.1.16
+	github.com/sap/component-operator-runtime v0.1.17
 	github.com/sap/go-generics v0.1.6
 	golang.org/x/mod v0.14.0
 	k8s.io/api v0.28.4
