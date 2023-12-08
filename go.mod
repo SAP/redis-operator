@@ -4,7 +4,7 @@ go 1.21.5
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.3
-	github.com/cert-manager/cert-manager v1.13.2
+	github.com/cert-manager/cert-manager v1.13.3
 	github.com/google/uuid v1.4.0
 	github.com/onsi/ginkgo/v2 v2.13.2
 	github.com/onsi/gomega v1.30.0
