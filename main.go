@@ -14,7 +14,6 @@ import (
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"k8s.io/client-go/discovery"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	apiregistrationv1 "k8s.io/kube-aggregator/pkg/apis/apiregistration/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -102,13 +101,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	discoveryClient, err := discovery.NewDiscoveryClientForConfig(mgr.GetConfig())
-	if err != nil {
-		setupLog.Error(err, "error creating discovery client")
-		os.Exit(1)
-	}
-
-	if err := operator.Setup(mgr, discoveryClient); err != nil {
+	if err := operator.Setup(mgr); err != nil {
 		setupLog.Error(err, "error registering controller with manager")
 		os.Exit(1)
 	}

@@ -27,7 +27,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"k8s.io/client-go/discovery"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
@@ -117,10 +116,7 @@ var _ = BeforeSuite(func() {
 	})
 	Expect(err).NotTo(HaveOccurred())
 
-	discoveryClient, err := discovery.NewDiscoveryClientForConfig(mgr.GetConfig())
-	Expect(err).NotTo(HaveOccurred())
-
-	err = operator.Setup(mgr, discoveryClient)
+	err = operator.Setup(mgr)
 	Expect(err).NotTo(HaveOccurred())
 
 	By("starting dummy controller-manager")

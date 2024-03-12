@@ -186,10 +186,7 @@ var _ = BeforeSuite(func() {
 		})
 		Expect(err).NotTo(HaveOccurred())
 
-		discoveryClient, err := discovery.NewDiscoveryClientForConfig(mgr.GetConfig())
-		Expect(err).NotTo(HaveOccurred())
-
-		err = operator.Setup(mgr, discoveryClient)
+		err = operator.Setup(mgr)
 		Expect(err).NotTo(HaveOccurred())
 
 		By("starting manager")

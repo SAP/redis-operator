@@ -12,12 +12,12 @@ import (
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"k8s.io/client-go/discovery"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/sap/component-operator-runtime/pkg/component"
 	"github.com/sap/component-operator-runtime/pkg/manifests"
+	"github.com/sap/component-operator-runtime/pkg/manifests/helm"
 	"github.com/sap/component-operator-runtime/pkg/operator"
 
 	operatorv1alpha1 "github.com/sap/redis-operator/api/v1alpha1"
@@ -60,8 +60,8 @@ func GetUncacheableTypes() []client.Object {
 	return defaultOperator.GetUncacheableTypes()
 }
 
-func Setup(mgr ctrl.Manager, discoveryClient discovery.DiscoveryInterface) error {
-	return defaultOperator.Setup(mgr, discoveryClient)
+func Setup(mgr ctrl.Manager) error {
+	return defaultOperator.Setup(mgr)
 }
 
 func New() *Operator {
@@ -95,18 +95,16 @@ func (o *Operator) GetUncacheableTypes() []client.Object {
 	return []client.Object{&operatorv1alpha1.Redis{}}
 }
 
-func (o *Operator) Setup(mgr ctrl.Manager, discoveryClient discovery.DiscoveryInterface) error {
+func (o *Operator) Setup(mgr ctrl.Manager) error {
 	parameterTransformer, err := manifests.NewTemplateParameterTransformer(data, "data/parameters.yaml")
 	if err != nil {
 		return errors.Wrap(err, "error initializing parameter transformer")
 	}
 	objectTransformer := transformer.NewObjectTransformer()
-	resourceGenerator, err := manifests.NewTransformableHelmGenerator(
-		Name,
+	resourceGenerator, err := helm.NewTransformableHelmGenerator(
 		data,
 		"data/charts/redis",
 		mgr.GetClient(),
-		discoveryClient,
 	)
 	if err != nil {
 		return errors.Wrap(err, "error initializing resource generator")
@@ -121,11 +119,8 @@ func (o *Operator) Setup(mgr ctrl.Manager, discoveryClient discovery.DiscoveryIn
 
 	if err := component.NewReconciler[*operatorv1alpha1.Redis](
 		o.options.Name,
-		mgr.GetClient(),
-		discoveryClient,
-		mgr.GetEventRecorderFor(o.options.Name),
-		mgr.GetScheme(),
 		resourceGenerator,
+		component.ReconcilerOptions{},
 	).WithPostReconcileHook(
 		reconcileBinding,
 	).SetupWithManager(mgr); err != nil {
