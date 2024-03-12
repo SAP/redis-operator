@@ -137,6 +137,8 @@ github.com/rogpeppe/go-internal v1.11.0 h1:cWPaGQEPrBb5/AsnsZesgZZ9yb1OQ+GOISoDN
 github.com/rogpeppe/go-internal v1.11.0/go.mod h1:ddIwULY96R17DhadqLgMfk9H9tvdUzkipdSkR5nkCZA=
 github.com/sap/admission-webhook-runtime v0.1.12 h1:BnkgBQns+LIR4mQTdNB4+w1FZxL2pKyxUm0OxG4ooEs=
 github.com/sap/admission-webhook-runtime v0.1.12/go.mod h1:0mi+HkxjUZo+kSoLXAoZv50oyfi69om0Ouqfc+zfABg=
+github.com/sap/admission-webhook-runtime v0.1.20 h1:zyYgCH0nWx19dfYCIqQMtl9BzveZ5laCYwC2F3I6OFw=
+github.com/sap/admission-webhook-runtime v0.1.20/go.mod h1:y4hs7rKG9zWDTaMnilXiugL9ZINBOYW5MHX6O01pXWg=
 github.com/sap/component-operator-runtime v0.3.10 h1:O6upww6SXnCQ9T7VDnkgYgGIz8L19HjOuFPF+wZXxkw=
 github.com/sap/component-operator-runtime v0.3.10/go.mod h1:+sv1ZEqsSjqNVBQ4HHiGJzZ8voOKNm7dR0msZJB7yvA=
 github.com/sap/go-generics v0.2.3 h1:cEY63YaVIqvOu2347drCilMvdgM1p2we2QwY4k/Nas0=
