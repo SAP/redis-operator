@@ -10,8 +10,8 @@ require (
 	github.com/onsi/gomega v1.31.1
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.5.1
-	github.com/sap/admission-webhook-runtime v0.1.20
-	github.com/sap/component-operator-runtime v0.3.11
+	github.com/sap/admission-webhook-runtime v0.1.21
+	github.com/sap/component-operator-runtime v0.3.12
 	github.com/sap/go-generics v0.2.3
 	golang.org/x/mod v0.16.0
 	k8s.io/api v0.29.3
