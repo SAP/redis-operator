@@ -13,9 +13,9 @@
     "gomodUpdateImportPaths"
   ],
   "ignoreDeps": [
-    "bitnami/redis",
-    "bitnami/redis-sentinel",
-    "bitnami/redis-exporter"
+    "docker.io/bitnami/redis",
+    "docker.io/bitnami/redis-sentinel",
+    "docker.io/bitnami/redis-exporter"
   ],
   "packageRules": [
     {
