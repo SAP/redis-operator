@@ -4,6 +4,8 @@ fullnameOverride: {{ $fullname }}
 
 {{- $sentinelEnabled := (dig "sentinel" "enabled" false .) }}
 {{- $metricsEnabled := (dig "metrics" "enabled" false .) }}
+{{- $metricsServiceMonitorEnabled := (dig "metrics" "monitor" "enabled" false .) }}
+{{- $metricsPrometheusRuleEnabled := (dig "metrics" "prometheusRule" "enabled" false .) }}
 {{- $tlsEnabled := (dig "tls" "enabled" false .) }}
 {{- $persistenceEnabled := (dig "persistence" "enabled" false .) }}
 
@@ -175,6 +177,20 @@ metrics:
   containerSecurityContext:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .metrics.service }}
+  service:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if $metricsServiceMonitorEnabled }}
+  {{- with .metrics.monitor }}
+  serviceMonitor:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}{{- end }}
+  {{- if $metricsPrometheusRuleEnabled }}
+  {{- with .metrics.prometheusRule }}
+  prometheusRule:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}{{- end }}  
 {{- end }}
 
 {{- if $tlsEnabled }}
