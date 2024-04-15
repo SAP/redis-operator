@@ -177,10 +177,6 @@ metrics:
   containerSecurityContext:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .metrics.service }}
-  service:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   {{- if $metricsServiceMonitorEnabled }}
   {{- with .metrics.monitor }}
   serviceMonitor:

@@ -42,35 +42,25 @@ type SentinelProperties struct {
 type MetricsProperties struct {
 	Enabled                                 bool `json:"enabled,omitempty"`
 	component.KubernetesContainerProperties `json:",inline"`
-	Service                                 *MetricsServiceProperties        `json:"service,omitempty"`
 	ServiceMonitor                          *MetricsServiceMonitorProperties `json:"monitor,omitempty"`
 	PrometheusRule                          *MetricsPrometheusRuleProperties `json:"prometheusRule,omitempty"`
 }
 
-// Attributes for metrics service
-type MetricsServiceProperties struct {
-	Type        string            `json:"type,omitempty"`
-	Port        string            `json:"port,omitempty"`
-	Annotations map[string]string `json:"annotations,omitempty"`
-}
-
 type MetricsServiceMonitorProperties struct {
 	Enabled            bool                          `json:"enabled,omitempty"`
-	Namespace          string                        `json:"namespace,omitempty"`
 	Interval           string                        `json:"interval,omitempty"`
 	ScrapeTimeout      string                        `json:"scrapeTimeout,omitempty"`
 	Relabellings       []*prometheusv1.RelabelConfig `json:"relabellings,omitempty"`
 	MetricRelabellings []*prometheusv1.RelabelConfig `json:"metricRelabellings,omitempty"`
 	HonorLabels        bool                          `json:"honorLabels,omitempty"`
 	AdditionalLabels   map[string]string             `json:"additionalLabels,omitempty"`
-	PodTargetLabels    map[string]string             `json:"podTargetLabels,omitempty"`
+	PodTargetLabels    []string                      `json:"podTargetLabels,omitempty"`
 }
 
 type MetricsPrometheusRuleProperties struct {
-	Enabled          bool                     `json:"enabled,omitempty"`
-	Namespace        string                   `json:"namespace,omitempty"`
-	AdditionalLabels map[string]string        `json:"additionalLabels,omitempty"`
-	Rules            []prometheusv1.RuleGroup `json:"groups,omitempty"`
+	Enabled          bool                `json:"enabled,omitempty"`
+	AdditionalLabels map[string]string   `json:"additionalLabels,omitempty"`
+	Rules            []prometheusv1.Rule `json:"rules,omitempty"`
 }
 
 // TLSProperties models TLS settings of the redis services
