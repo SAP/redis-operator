@@ -37,7 +37,10 @@ import (
 	operatorv1alpha1 "github.com/sap/redis-operator/api/v1alpha1"
 )
 
-const CertManagerVersion = "v1.12.1"
+const (
+	CertManagerVersion        = "v1.12.1"
+	PrometheusOperatorVersion = "v0.73.1"
+)
 
 // run command and print stdout/stderr
 func run(ctx context.Context, name string, arg ...string) error {
@@ -97,8 +100,20 @@ func createKindCluster(ctx context.Context, kind string, name string, kubeconfig
 	if err != nil {
 		return err
 	}
+	err = downloadAndApplyManifests(ctx, cli, fmt.Sprintf("https://github.com/cert-manager/cert-manager/releases/download/%s/cert-manager.yaml", CertManagerVersion))
+	if err != nil {
+		return err
+	}
+	err = downloadAndApplyManifests(ctx, cli, fmt.Sprintf("https://github.com/prometheus-operator/prometheus-operator/releases/download/%s/stripped-down-crds.yaml", PrometheusOperatorVersion))
+	if err != nil {
+		return err
+	}
 
-	resp, err := http.Get(fmt.Sprintf("https://github.com/cert-manager/cert-manager/releases/download/%s/cert-manager.yaml", CertManagerVersion))
+	return nil
+}
+
+func downloadAndApplyManifests(ctx context.Context, cli client.Client, url string) error {
+	resp, err := http.Get(url)
 	if err != nil {
 		return err
 	}
@@ -107,11 +122,7 @@ func createKindCluster(ctx context.Context, kind string, name string, kubeconfig
 	if err != nil {
 		return err
 	}
-	if err := applyManifests(ctx, cli, manifests); err != nil {
-		return err
-	}
-
-	return nil
+	return applyManifests(ctx, cli, manifests)
 }
 
 // delete kind cluster

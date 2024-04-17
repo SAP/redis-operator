@@ -33,6 +33,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/discovery"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -47,6 +48,7 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
+	prometheusv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"github.com/sap/component-operator-runtime/pkg/component"
 	"github.com/sap/go-generics/slices"
 	operatorv1alpha1 "github.com/sap/redis-operator/api/v1alpha1"
@@ -133,6 +135,7 @@ var _ = BeforeSuite(func() {
 	utilruntime.Must(apiextensionsv1.AddToScheme(scheme))
 	utilruntime.Must(apiregistrationv1.AddToScheme(scheme))
 	utilruntime.Must(certmanagerv1.AddToScheme(scheme))
+	utilruntime.Must(prometheusv1.AddToScheme(scheme))
 	operator.InitScheme(scheme)
 
 	By("initializing client")
@@ -325,6 +328,77 @@ var _ = Describe("Deploy Redis", func() {
 		createRedis(redis, true, "300s")
 		doSomethingWithRedis(redis)
 	})
+
+	It("should deploy Redis without sentinel, 1 node, with TLS disabled with metrics, service monitor and prometheus rule enabled", func() {
+		fmt.Printf("Test output")
+		var duration prometheusv1.Duration = "5m"
+		redis := &operatorv1alpha1.Redis{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace:    namespace,
+				GenerateName: "test-",
+			},
+			Spec: operatorv1alpha1.RedisSpec{
+				Replicas: 1,
+				Sentinel: &operatorv1alpha1.SentinelProperties{
+					Enabled: false,
+				},
+				TLS: &operatorv1alpha1.TLSProperties{
+					Enabled: false,
+				},
+				Metrics: &operatorv1alpha1.MetricsProperties{
+					Enabled: true,
+					ServiceMonitor: &operatorv1alpha1.MetricsServiceMonitorProperties{
+						Enabled:       true,
+						Interval:      "30s",
+						ScrapeTimeout: "10s",
+						Relabellings: []*prometheusv1.RelabelConfig{
+							{SourceLabels: []prometheusv1.LabelName{"__meta_kubernetes_namespace"}, TargetLabel: "namespace"},
+							{SourceLabels: []prometheusv1.LabelName{"__meta_kubernetes_pod_name"}, TargetLabel: "pod"},
+						},
+						MetricRelabellings: []*prometheusv1.RelabelConfig{
+							{SourceLabels: []prometheusv1.LabelName{"__name__"}, TargetLabel: "metric"},
+							{SourceLabels: []prometheusv1.LabelName{"__meta_kubernetes_pod_name"}, TargetLabel: "pod"},
+						},
+						HonorLabels: true,
+						AdditionalLabels: map[string]string{
+							"app": "redis",
+						},
+						PodTargetLabels: []string{"app"},
+					},
+					PrometheusRule: &operatorv1alpha1.MetricsPrometheusRuleProperties{
+						Enabled: true,
+						AdditionalLabels: map[string]string{
+							"app": "redis",
+						},
+						Rules: []prometheusv1.Rule{
+							{
+								Record: "redis:metrics:exporter:scrape_duration_seconds:avg",
+								Expr:   intstr.FromString("avg(redis:metrics:exporter:scrape_duration_seconds) by (namespace, pod)"),
+							},
+							{
+								Alert: "RedisExporterDown",
+								Expr:  intstr.FromString("up{job=\"redis-exporter\"} == 0"),
+								For:   &duration,
+								Labels: map[string]string{
+									"severity": "critical",
+								},
+								Annotations: map[string]string{
+									"summary": "Redis exporter is down",
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+		defer deleteRedis(redis, true, "60s")
+		createRedis(redis, true, "300s")
+		doSomethingWithRedis(redis)
+		checkServiceForMetrics(redis)
+		checkServiceMonitor(redis)
+		checkPrometheusRule(redis)
+	})
+
 })
 
 func createNamespace() string {
@@ -530,4 +604,40 @@ func doSomethingWithRedis(redis *operatorv1alpha1.Redis) {
 			Expect(val).To(Equal(value))
 		}
 	}
+}
+
+func checkServiceForMetrics(redis *operatorv1alpha1.Redis) {
+	service := &corev1.Service{}
+	serviceName := fmt.Sprintf("redis-%s-metrics", redis.Name)
+	err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: serviceName}, service)
+	Expect(err).NotTo(HaveOccurred())
+}
+
+func checkServiceMonitor(redis *operatorv1alpha1.Redis) {
+	serviceMonitor := &prometheusv1.ServiceMonitor{}
+	serviceMonitorName := fmt.Sprintf("redis-%s", redis.Name)
+	err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: serviceMonitorName}, serviceMonitor)
+	Expect(err).NotTo(HaveOccurred())
+
+	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].Interval).To(Equal(redis.Spec.Metrics.ServiceMonitor.Interval))
+	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].ScrapeTimeout).To(Equal(redis.Spec.Metrics.ServiceMonitor.ScrapeTimeout))
+	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].RelabelConfigs).To(Equal(redis.Spec.Metrics.ServiceMonitor.Relabellings))
+	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].MetricRelabelConfigs).To(Equal(redis.Spec.Metrics.ServiceMonitor.MetricRelabellings))
+	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].HonorLabels).To(Equal(redis.Spec.Metrics.ServiceMonitor.HonorLabels))
+	for k, v := range redis.Spec.Metrics.ServiceMonitor.AdditionalLabels {
+		Expect(serviceMonitor.ObjectMeta.Labels).Should(HaveKeyWithValue(k, v))
+	}
+	Expect(serviceMonitor.Spec.PodTargetLabels).To(ContainElements(redis.Spec.Metrics.ServiceMonitor.PodTargetLabels))
+}
+
+func checkPrometheusRule(redis *operatorv1alpha1.Redis) {
+	prometheusRule := &prometheusv1.PrometheusRule{}
+	prometheusRuleName := fmt.Sprintf("redis-%s", redis.Name)
+	err := cli.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: prometheusRuleName}, prometheusRule)
+	Expect(err).NotTo(HaveOccurred())
+
+	for k, v := range redis.Spec.Metrics.PrometheusRule.AdditionalLabels {
+		Expect(prometheusRule.ObjectMeta.Labels).Should(HaveKeyWithValue(k, v))
+	}
+	Expect(prometheusRule.Spec.Groups[0].Rules).To(Equal(redis.Spec.Metrics.PrometheusRule.Rules))
 }

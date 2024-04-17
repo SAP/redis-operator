@@ -31,7 +31,7 @@ spec:
           sourceLabels:
             - __meta_kubernetes_pod_container_name
           targetLabel: container
-      metricRelabellings:
+      metricRelabelings:
         - action: replace
           sourceLabels:
             - __name__
