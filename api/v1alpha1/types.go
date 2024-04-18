@@ -11,6 +11,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 
+	prometheusv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"github.com/sap/component-operator-runtime/pkg/component"
 	componentoperatorruntimetypes "github.com/sap/component-operator-runtime/pkg/types"
 )
@@ -41,6 +42,25 @@ type SentinelProperties struct {
 type MetricsProperties struct {
 	Enabled                                 bool `json:"enabled,omitempty"`
 	component.KubernetesContainerProperties `json:",inline"`
+	ServiceMonitor                          *MetricsServiceMonitorProperties `json:"monitor,omitempty"`
+	PrometheusRule                          *MetricsPrometheusRuleProperties `json:"prometheusRule,omitempty"`
+}
+
+type MetricsServiceMonitorProperties struct {
+	Enabled            bool                          `json:"enabled,omitempty"`
+	Interval           prometheusv1.Duration         `json:"interval,omitempty"`
+	ScrapeTimeout      prometheusv1.Duration         `json:"scrapeTimeout,omitempty"`
+	Relabellings       []*prometheusv1.RelabelConfig `json:"relabellings,omitempty"`
+	MetricRelabellings []*prometheusv1.RelabelConfig `json:"metricRelabelings,omitempty"`
+	HonorLabels        bool                          `json:"honorLabels,omitempty"`
+	AdditionalLabels   map[string]string             `json:"additionalLabels,omitempty"`
+	PodTargetLabels    []string                      `json:"podTargetLabels,omitempty"`
+}
+
+type MetricsPrometheusRuleProperties struct {
+	Enabled          bool                `json:"enabled,omitempty"`
+	AdditionalLabels map[string]string   `json:"additionalLabels,omitempty"`
+	Rules            []prometheusv1.Rule `json:"rules,omitempty"`
 }
 
 // TLSProperties models TLS settings of the redis services

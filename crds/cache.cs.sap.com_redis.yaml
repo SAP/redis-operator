@@ -945,6 +945,280 @@ spec:
                 properties:
                   enabled:
                     type: boolean
+                  monitor:
+                    properties:
+                      additionalLabels:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      enabled:
+                        type: boolean
+                      honorLabels:
+                        type: boolean
+                      interval:
+                        description: |-
+                          Duration is a valid time duration that can be parsed by Prometheus model.ParseDuration() function.
+                          Supported units: y, w, d, h, m, s, ms
+                          Examples: `30s`, `1m`, `1h20m15s`, `15d`
+                        pattern: ^(0|(([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?)$
+                        type: string
+                      metricRelabelings:
+                        items:
+                          description: |-
+                            RelabelConfig allows dynamic rewriting of the label set for targets, alerts,
+                            scraped samples and remote write samples.
+
+
+                            More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+                          properties:
+                            action:
+                              default: replace
+                              description: |-
+                                Action to perform based on the regex matching.
+
+
+                                `Uppercase` and `Lowercase` actions require Prometheus >= v2.36.0.
+                                `DropEqual` and `KeepEqual` actions require Prometheus >= v2.41.0.
+
+
+                                Default: "Replace"
+                              enum:
+                              - replace
+                              - Replace
+                              - keep
+                              - Keep
+                              - drop
+                              - Drop
+                              - hashmod
+                              - HashMod
+                              - labelmap
+                              - LabelMap
+                              - labeldrop
+                              - LabelDrop
+                              - labelkeep
+                              - LabelKeep
+                              - lowercase
+                              - Lowercase
+                              - uppercase
+                              - Uppercase
+                              - keepequal
+                              - KeepEqual
+                              - dropequal
+                              - DropEqual
+                              type: string
+                            modulus:
+                              description: |-
+                                Modulus to take of the hash of the source label values.
+
+
+                                Only applicable when the action is `HashMod`.
+                              format: int64
+                              type: integer
+                            regex:
+                              description: Regular expression against which the extracted
+                                value is matched.
+                              type: string
+                            replacement:
+                              description: |-
+                                Replacement value against which a Replace action is performed if the
+                                regular expression matches.
+
+
+                                Regex capture groups are available.
+                              type: string
+                            separator:
+                              description: Separator is the string between concatenated
+                                SourceLabels.
+                              type: string
+                            sourceLabels:
+                              description: |-
+                                The source labels select values from existing labels. Their content is
+                                concatenated using the configured Separator and matched against the
+                                configured regular expression.
+                              items:
+                                description: |-
+                                  LabelName is a valid Prometheus label name which may only contain ASCII
+                                  letters, numbers, as well as underscores.
+                                pattern: ^[a-zA-Z_][a-zA-Z0-9_]*$
+                                type: string
+                              type: array
+                            targetLabel:
+                              description: |-
+                                Label to which the resulting string is written in a replacement.
+
+
+                                It is mandatory for `Replace`, `HashMod`, `Lowercase`, `Uppercase`,
+                                `KeepEqual` and `DropEqual` actions.
+
+
+                                Regex capture groups are available.
+                              type: string
+                          type: object
+                        type: array
+                      podTargetLabels:
+                        items:
+                          type: string
+                        type: array
+                      relabellings:
+                        items:
+                          description: |-
+                            RelabelConfig allows dynamic rewriting of the label set for targets, alerts,
+                            scraped samples and remote write samples.
+
+
+                            More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+                          properties:
+                            action:
+                              default: replace
+                              description: |-
+                                Action to perform based on the regex matching.
+
+
+                                `Uppercase` and `Lowercase` actions require Prometheus >= v2.36.0.
+                                `DropEqual` and `KeepEqual` actions require Prometheus >= v2.41.0.
+
+
+                                Default: "Replace"
+                              enum:
+                              - replace
+                              - Replace
+                              - keep
+                              - Keep
+                              - drop
+                              - Drop
+                              - hashmod
+                              - HashMod
+                              - labelmap
+                              - LabelMap
+                              - labeldrop
+                              - LabelDrop
+                              - labelkeep
+                              - LabelKeep
+                              - lowercase
+                              - Lowercase
+                              - uppercase
+                              - Uppercase
+                              - keepequal
+                              - KeepEqual
+                              - dropequal
+                              - DropEqual
+                              type: string
+                            modulus:
+                              description: |-
+                                Modulus to take of the hash of the source label values.
+
+
+                                Only applicable when the action is `HashMod`.
+                              format: int64
+                              type: integer
+                            regex:
+                              description: Regular expression against which the extracted
+                                value is matched.
+                              type: string
+                            replacement:
+                              description: |-
+                                Replacement value against which a Replace action is performed if the
+                                regular expression matches.
+
+
+                                Regex capture groups are available.
+                              type: string
+                            separator:
+                              description: Separator is the string between concatenated
+                                SourceLabels.
+                              type: string
+                            sourceLabels:
+                              description: |-
+                                The source labels select values from existing labels. Their content is
+                                concatenated using the configured Separator and matched against the
+                                configured regular expression.
+                              items:
+                                description: |-
+                                  LabelName is a valid Prometheus label name which may only contain ASCII
+                                  letters, numbers, as well as underscores.
+                                pattern: ^[a-zA-Z_][a-zA-Z0-9_]*$
+                                type: string
+                              type: array
+                            targetLabel:
+                              description: |-
+                                Label to which the resulting string is written in a replacement.
+
+
+                                It is mandatory for `Replace`, `HashMod`, `Lowercase`, `Uppercase`,
+                                `KeepEqual` and `DropEqual` actions.
+
+
+                                Regex capture groups are available.
+                              type: string
+                          type: object
+                        type: array
+                      scrapeTimeout:
+                        description: |-
+                          Duration is a valid time duration that can be parsed by Prometheus model.ParseDuration() function.
+                          Supported units: y, w, d, h, m, s, ms
+                          Examples: `30s`, `1m`, `1h20m15s`, `15d`
+                        pattern: ^(0|(([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?)$
+                        type: string
+                    type: object
+                  prometheusRule:
+                    properties:
+                      additionalLabels:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      enabled:
+                        type: boolean
+                      rules:
+                        items:
+                          description: |-
+                            Rule describes an alerting or recording rule
+                            See Prometheus documentation: [alerting](https://www.prometheus.io/docs/prometheus/latest/configuration/alerting_rules/) or [recording](https://www.prometheus.io/docs/prometheus/latest/configuration/recording_rules/#recording-rules) rule
+                          properties:
+                            alert:
+                              description: |-
+                                Name of the alert. Must be a valid label value.
+                                Only one of `record` and `alert` must be set.
+                              type: string
+                            annotations:
+                              additionalProperties:
+                                type: string
+                              description: |-
+                                Annotations to add to each alert.
+                                Only valid for alerting rules.
+                              type: object
+                            expr:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: PromQL expression to evaluate.
+                              x-kubernetes-int-or-string: true
+                            for:
+                              description: Alerts are considered firing once they
+                                have been returned for this long.
+                              pattern: ^(0|(([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?)$
+                              type: string
+                            keep_firing_for:
+                              description: KeepFiringFor defines how long an alert
+                                will continue firing after the condition that triggered
+                                it has cleared.
+                              minLength: 1
+                              pattern: ^(0|(([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?)$
+                              type: string
+                            labels:
+                              additionalProperties:
+                                type: string
+                              description: Labels to add or overwrite.
+                              type: object
+                            record:
+                              description: |-
+                                Name of the time series to output to. Must be a valid metric name.
+                                Only one of `record` and `alert` must be set.
+                              type: string
+                          required:
+                          - expr
+                          type: object
+                        type: array
+                    type: object
                   resources:
                     description: ResourceRequirements describes the compute resource
                       requirements.
