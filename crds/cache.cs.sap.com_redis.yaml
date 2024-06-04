@@ -932,6 +932,14 @@ spec:
                         type: array
                     type: object
                 type: object
+              auth:
+                description: AuthProperties models for authentication
+                properties:
+                  enabled:
+                    type: boolean
+                  existingSecret:
+                    type: string
+                type: object
               binding:
                 description: BindingProperties models custom properties for the generated
                   binding secret

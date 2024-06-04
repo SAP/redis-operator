@@ -28,6 +28,7 @@ type RedisSpec struct {
 	Sentinel                                *SentinelProperties    `json:"sentinel,omitempty"`
 	Metrics                                 *MetricsProperties     `json:"metrics,omitempty"`
 	TLS                                     *TLSProperties         `json:"tls,omitempty"`
+	Auth                                    *AuthProperties        `json:"auth,omitempty"`
 	Persistence                             *PersistenceProperties `json:"persistence,omitempty"`
 	Binding                                 *BindingProperties     `json:"binding,omitempty"`
 }
@@ -67,6 +68,12 @@ type MetricsPrometheusRuleProperties struct {
 type TLSProperties struct {
 	Enabled     bool                   `json:"enabled,omitempty"`
 	CertManager *CertManagerProperties `json:"certManager,omitempty"`
+}
+
+// AuthProperties models for authentication
+type AuthProperties struct {
+	Enabled        bool   `json:"enabled,omitempty"`
+	ExistingSecret string `json:"existingSecret,omitempty"`
 }
 
 // CertManagerProperties models cert-manager related attributes
