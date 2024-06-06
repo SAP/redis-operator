@@ -1,3 +1,8 @@
+{{/*
+Copyright Broadcom, Inc. All Rights Reserved.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
@@ -29,6 +34,13 @@ Return the proper image name (for the init container volume-permissions image)
 {{- end -}}
 
 {{/*
+Return kubectl image
+*/}}
+{{- define "redis.kubectl.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.kubectl.image "global" .Values.global) }}
+{{- end -}}
+
+{{/*
 Return sysctl image
 */}}
 {{- define "redis.sysctl.image" -}}
@@ -39,7 +51,7 @@ Return sysctl image
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "redis.imagePullSecrets" -}}
-{{- include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.sentinel.image .Values.metrics.image .Values.volumePermissions.image .Values.sysctl.image) "global" .Values.global) -}}
+{{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image .Values.sentinel.image .Values.metrics.image .Values.volumePermissions.image .Values.sysctl.image) "context" $) -}}
 {{- end -}}
 
 {{/*
@@ -204,7 +216,7 @@ Get the password key to be retrieved from Redis&reg; secret.
 */}}
 {{- define "redis.secretPasswordKey" -}}
 {{- if and .Values.auth.existingSecret .Values.auth.existingSecretPasswordKey -}}
-{{- printf "%s" .Values.auth.existingSecretPasswordKey -}}
+{{- printf "%s" (tpl .Values.auth.existingSecretPasswordKey $) -}}
 {{- else -}}
 {{- printf "redis-password" -}}
 {{- end -}}
@@ -235,7 +247,7 @@ Return Redis&reg; password
     {{- else if not (empty .Values.auth.password) -}}
         {{- .Values.auth.password -}}
     {{- else -}}
-        {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "redis.secretName" .) "Length" 10 "Key" (include "redis.secretPasswordKey" .))  -}}
+        {{- include "getValueFromSecret" (dict "Namespace" (include "common.names.namespace" .) "Name" (include "redis.secretName" .) "Length" 10 "Key" (include "redis.secretPasswordKey" .))  -}}
     {{- end -}}
 {{- end -}}
 {{- end }}
@@ -256,6 +268,7 @@ Compile all warnings into a single message, and call fail.
 {{- $messages := append $messages (include "redis.validateValues.architecture" .) -}}
 {{- $messages := append $messages (include "redis.validateValues.podSecurityPolicy.create" .) -}}
 {{- $messages := append $messages (include "redis.validateValues.tls" .) -}}
+{{- $messages := append $messages (include "redis.validateValues.createMaster" .) -}}
 {{- $messages := without $messages "" -}}
 {{- $message := join "\n" $messages -}}
 
@@ -304,6 +317,16 @@ redis: tls.enabled
     In order to enable TLS, you also need to provide
     an existing secret containing the TLS certificates or
     enable auto-generated certificates.
+{{- end -}}
+{{- end -}}
+
+{{/* Validate values of Redis&reg; - master service enabled */}}
+{{- define "redis.validateValues.createMaster" -}}
+{{- if and (or .Values.sentinel.masterService.enabled .Values.sentinel.service.createMaster) (or (not .Values.rbac.create) (not .Values.replica.automountServiceAccountToken) (not .Values.serviceAccount.create)) }}
+redis: sentinel.masterService.enabled
+    In order to redirect requests only to the master pod via the service, you also need to
+    create rbac and serviceAccount. In addition, you need to enable
+    replica.automountServiceAccountToken.
 {{- end -}}
 {{- end -}}
 
