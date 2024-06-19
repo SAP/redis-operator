@@ -72,6 +72,7 @@ type TLSProperties struct {
 
 // AuthProperties models for authentication
 type AuthProperties struct {
+	Enabled        bool   `json:"enabled,omitempty"`
 	ExistingSecret string `json:"existingSecret,omitempty"`
 }
 
