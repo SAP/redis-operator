@@ -7,7 +7,7 @@ fullnameOverride: {{ $fullname }}
 {{- $metricsServiceMonitorEnabled := (dig "metrics" "monitor" "enabled" false .) }}
 {{- $metricsPrometheusRuleEnabled := (dig "metrics" "prometheusRule" "enabled" false .) }}
 {{- $tlsEnabled := (dig "tls" "enabled" false .) }}
-{{- $authEnabled := (dig "auth" "enabled" false .) }}
+{{- $authEnabled := (dig "auth" "enabled" true .) }}
 {{- $persistenceEnabled := (dig "persistence" "enabled" false .) }}
 
 {{- with .Version}}
@@ -206,6 +206,9 @@ tls:
 
 auth:
   enabled: {{ $authEnabled }}
+  {{- if and .auth .auth.existingSecret }}
+  existingSecret: {{ .auth.existingSecret }}
+  {{- end }}
 
 networkPolicy:
   enabled: true

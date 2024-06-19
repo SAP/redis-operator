@@ -935,8 +935,6 @@ spec:
               auth:
                 description: AuthProperties models for authentication
                 properties:
-                  enabled:
-                    type: boolean
                   existingSecret:
                     type: string
                 type: object

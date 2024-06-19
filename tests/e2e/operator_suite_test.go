@@ -258,6 +258,23 @@ var _ = Describe("Deploy Redis", func() {
 		doSomethingWithRedis(redis)
 	})
 
+	It("should deploy Redis with one master and zero read replicas without authentication", func() {
+		redis := &operatorv1alpha1.Redis{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace:    namespace,
+				GenerateName: "test-",
+			},
+			Spec: operatorv1alpha1.RedisSpec{
+				Auth: &operatorv1alpha1.AuthProperties{
+					Enabled: false,
+				},
+			},
+		}
+		defer deleteRedis(redis, true, "60s")
+		createRedis(redis, true, "300s")
+		doSomethingWithRedis(redis)
+	})
+
 	It("should deploy Redis with sentinel (three nodes), with metrics, TLS, persistence enabled", func() {
 		redis := &operatorv1alpha1.Redis{
 			ObjectMeta: metav1.ObjectMeta{
