@@ -1,7 +1,7 @@
 # Image URL to use all building/pushing image targets
 IMG ?= redis-operator:latest
 # K8s version used by envtest
-ENVTEST_K8S_VERSION = 1.26.1
+ENVTEST_K8S_VERSION = 1.30.3
 
 # Set shell to bash
 SHELL = /usr/bin/env bash
@@ -86,8 +86,8 @@ LISTER_GEN ?= $(LOCALBIN)/lister-gen
 SETUP_ENVTEST ?= $(LOCALBIN)/setup-envtest
 
 ## Tool Versions
-CONTROLLER_TOOLS_VERSION ?= v0.14.0
-CODE_GENERATOR_VERSION ?= v0.28.1
+CONTROLLER_TOOLS_VERSION ?= v0.16.1
+CODE_GENERATOR_VERSION ?= v0.29.8
 SETUP_ENVTEST_VERSION ?= latest
 
 .PHONY: controller-gen
