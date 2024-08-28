@@ -173,10 +173,14 @@ github.com/rogpeppe/go-internal v1.12.0 h1:exVL4IDcn6na9z1rAb56Vxr+CgyK3nn3O+epU
 github.com/rogpeppe/go-internal v1.12.0/go.mod h1:E+RYuTGaKKdloAfM02xzb0FW3Paa99yedzYV+kq4uf4=
 github.com/sap/admission-webhook-runtime v0.1.21 h1:kiZMmPduFypVUBSZ6UgCjBFBe4Y8kC38rKI2+tD6mxU=
 github.com/sap/admission-webhook-runtime v0.1.21/go.mod h1:VbnwnaDwFOfJcwlVLPgv87UKtPV5aolGuJOKGe0qlFQ=
+github.com/sap/admission-webhook-runtime v0.1.40 h1:3ku1DZVuF1ssSCEB4KkcXk0/GU6bwnZqGQ3dOaPUSFY=
+github.com/sap/admission-webhook-runtime v0.1.40/go.mod h1:JrRS96YG4mBpDzGwMZzy2o9tGmx0n8DyLyrjyrdSX9g=
 github.com/sap/component-operator-runtime v0.3.34 h1:ewqs6mAQxYlBGsXffBkBWcwpZTPr6YL12NNBakQ/sn0=
 github.com/sap/component-operator-runtime v0.3.34/go.mod h1:nvtWaSpVyb+2d+AWhHPjyr187/yrt9ssVH7DxMyGkrU=
 github.com/sap/go-generics v0.2.13 h1:rSED7M+S7aw/9AomJq7omjgZtwvoixHsfVbOiCWs4cM=
 github.com/sap/go-generics v0.2.13/go.mod h1:G6v+AnJtKlUGB/ATd+zdUcosvBdUSyrHg7/kn5UKgx8=
+github.com/sap/go-generics v0.2.18 h1:vkfXvxG9KICMxZw2PoLQE78tvSCrY0Qemrclg2MVniY=
+github.com/sap/go-generics v0.2.18/go.mod h1:sZcy1CCChvTGv+OBXZIvK1RtK58thCS2NMld7nE3I4k=
 github.com/shopspring/decimal v1.2.0/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
 github.com/shopspring/decimal v1.3.1 h1:2Usl1nmF/WZucqkFZhnfFYxxxu8LG21F6nPQBE5gKV8=
 github.com/shopspring/decimal v1.3.1/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
