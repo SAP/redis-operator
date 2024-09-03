@@ -9,10 +9,10 @@ require (
 	github.com/onsi/ginkgo/v2 v2.20.2
 	github.com/onsi/gomega v1.34.2
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.76.0
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.76.1
 	github.com/redis/go-redis/v9 v9.6.1
 	github.com/sap/admission-webhook-runtime v0.1.41
-	github.com/sap/component-operator-runtime v0.3.35
+	github.com/sap/component-operator-runtime v0.3.36
 	github.com/sap/go-generics v0.2.19
 	golang.org/x/mod v0.20.0
 	k8s.io/api v0.31.0
