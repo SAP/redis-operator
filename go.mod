@@ -23,7 +23,7 @@ require (
 	k8s.io/kube-aggregator v0.31.0
 	sigs.k8s.io/controller-runtime v0.19.0
 	sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20240903085516-38546806f2fa
-	sigs.k8s.io/controller-tools v0.15.0
+	sigs.k8s.io/controller-tools v0.16.2
 	sigs.k8s.io/yaml v1.4.0
 )
 
@@ -37,7 +37,7 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/emicklei/go-restful/v3 v3.12.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
-	github.com/fatih/color v1.16.0 // indirect
+	github.com/fatih/color v1.17.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
