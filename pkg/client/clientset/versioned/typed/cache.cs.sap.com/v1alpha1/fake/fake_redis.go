@@ -30,22 +30,24 @@ var redisKind = v1alpha1.SchemeGroupVersion.WithKind("Redis")
 
 // Get takes name of the redis, and returns the corresponding redis object, and an error if there is any.
 func (c *FakeRedis) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Redis, err error) {
+	emptyResult := &v1alpha1.Redis{}
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(redisResource, c.ns, name), &v1alpha1.Redis{})
+		Invokes(testing.NewGetActionWithOptions(redisResource, c.ns, name, options), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.Redis), err
 }
 
 // List takes label and field selectors, and returns the list of Redis that match those selectors.
 func (c *FakeRedis) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.RedisList, err error) {
+	emptyResult := &v1alpha1.RedisList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(redisResource, redisKind, c.ns, opts), &v1alpha1.RedisList{})
+		Invokes(testing.NewListActionWithOptions(redisResource, redisKind, c.ns, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -64,40 +66,43 @@ func (c *FakeRedis) List(ctx context.Context, opts v1.ListOptions) (result *v1al
 // Watch returns a watch.Interface that watches the requested redis.
 func (c *FakeRedis) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(redisResource, c.ns, opts))
+		InvokesWatch(testing.NewWatchActionWithOptions(redisResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a redis and creates it.  Returns the server's representation of the redis, and an error, if there is any.
 func (c *FakeRedis) Create(ctx context.Context, redis *v1alpha1.Redis, opts v1.CreateOptions) (result *v1alpha1.Redis, err error) {
+	emptyResult := &v1alpha1.Redis{}
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(redisResource, c.ns, redis), &v1alpha1.Redis{})
+		Invokes(testing.NewCreateActionWithOptions(redisResource, c.ns, redis, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.Redis), err
 }
 
 // Update takes the representation of a redis and updates it. Returns the server's representation of the redis, and an error, if there is any.
 func (c *FakeRedis) Update(ctx context.Context, redis *v1alpha1.Redis, opts v1.UpdateOptions) (result *v1alpha1.Redis, err error) {
+	emptyResult := &v1alpha1.Redis{}
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(redisResource, c.ns, redis), &v1alpha1.Redis{})
+		Invokes(testing.NewUpdateActionWithOptions(redisResource, c.ns, redis, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.Redis), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeRedis) UpdateStatus(ctx context.Context, redis *v1alpha1.Redis, opts v1.UpdateOptions) (*v1alpha1.Redis, error) {
+func (c *FakeRedis) UpdateStatus(ctx context.Context, redis *v1alpha1.Redis, opts v1.UpdateOptions) (result *v1alpha1.Redis, err error) {
+	emptyResult := &v1alpha1.Redis{}
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(redisResource, "status", c.ns, redis), &v1alpha1.Redis{})
+		Invokes(testing.NewUpdateSubresourceActionWithOptions(redisResource, "status", c.ns, redis, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.Redis), err
 }
@@ -112,7 +117,7 @@ func (c *FakeRedis) Delete(ctx context.Context, name string, opts v1.DeleteOptio
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeRedis) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(redisResource, c.ns, listOpts)
+	action := testing.NewDeleteCollectionActionWithOptions(redisResource, c.ns, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.RedisList{})
 	return err
@@ -120,11 +125,12 @@ func (c *FakeRedis) DeleteCollection(ctx context.Context, opts v1.DeleteOptions,
 
 // Patch applies the patch and returns the patched redis.
 func (c *FakeRedis) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Redis, err error) {
+	emptyResult := &v1alpha1.Redis{}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(redisResource, c.ns, name, pt, data, subresources...), &v1alpha1.Redis{})
+		Invokes(testing.NewPatchSubresourceActionWithOptions(redisResource, c.ns, name, pt, data, opts, subresources...), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.Redis), err
 }
