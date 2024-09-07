@@ -9,8 +9,8 @@ package v1alpha1
 
 import (
 	v1alpha1 "github.com/sap/redis-operator/api/v1alpha1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -27,25 +27,17 @@ type RedisLister interface {
 
 // redisLister implements the RedisLister interface.
 type redisLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1alpha1.Redis]
 }
 
 // NewRedisLister returns a new RedisLister.
 func NewRedisLister(indexer cache.Indexer) RedisLister {
-	return &redisLister{indexer: indexer}
-}
-
-// List lists all Redis in the indexer.
-func (s *redisLister) List(selector labels.Selector) (ret []*v1alpha1.Redis, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Redis))
-	})
-	return ret, err
+	return &redisLister{listers.New[*v1alpha1.Redis](indexer, v1alpha1.Resource("redis"))}
 }
 
 // Redis returns an object that can list and get Redis.
 func (s *redisLister) Redis(namespace string) RedisNamespaceLister {
-	return redisNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return redisNamespaceLister{listers.NewNamespaced[*v1alpha1.Redis](s.ResourceIndexer, namespace)}
 }
 
 // RedisNamespaceLister helps list and get Redis.
@@ -63,26 +55,5 @@ type RedisNamespaceLister interface {
 // redisNamespaceLister implements the RedisNamespaceLister
 // interface.
 type redisNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Redis in the indexer for a given namespace.
-func (s redisNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Redis, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Redis))
-	})
-	return ret, err
-}
-
-// Get retrieves the Redis from the indexer for a given namespace and name.
-func (s redisNamespaceLister) Get(name string) (*v1alpha1.Redis, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("redis"), name)
-	}
-	return obj.(*v1alpha1.Redis), nil
+	listers.ResourceIndexer[*v1alpha1.Redis]
 }

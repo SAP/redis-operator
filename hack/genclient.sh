@@ -2,9 +2,15 @@
 
 set -eo pipefail
 
-export GOROOT=$(go env GOROOT)
+BASEDIR=$(realpath "$(dirname "$0")"/..)
 
-BASEDIR=$(realpath $(dirname "$0")/..)
+export GOBIN=$BASEDIR/bin
+mkdir -p "$GOBIN"
+
+go mod download k8s.io/code-generator
+CODEGEN_DIR=$(go list -m -f '{{.Dir}}' k8s.io/code-generator)
+go install "$CODEGEN_DIR"/cmd/*
+
 TEMPDIR=$BASEDIR/tmp/gen
 trap 'rm -rf "$TEMPDIR"' EXIT
 mkdir -p "$TEMPDIR"
@@ -12,38 +18,39 @@ mkdir -p "$TEMPDIR"
 mkdir -p "$TEMPDIR"/apis/cache.cs.sap.com
 ln -s "$BASEDIR"/api/v1alpha1 "$TEMPDIR"/apis/cache.cs.sap.com/v1alpha1
 
-"$BASEDIR"/bin/client-gen \
+"$GOBIN"/client-gen \
   --clientset-name versioned \
-  --input-base "" \
-  --input github.com/sap/redis-operator/tmp/gen/apis/cache.cs.sap.com/v1alpha1 \
+  --input-base "$TEMPDIR"/apis \
+  --input cache.cs.sap.com/v1alpha1 \
   --go-header-file "$BASEDIR"/hack/boilerplate.go.txt \
-  --output-package github.com/sap/redis-operator/pkg/client/clientset \
-  --output-base "$TEMPDIR"/pkg/client \
+  --output-pkg github.com/sap/redis-operator/pkg/client/clientset \
+  --output-dir "$TEMPDIR"/pkg/client/clientset \
   --plural-exceptions Redis:redis
 
-"$BASEDIR"/bin/lister-gen \
-  --input-dirs github.com/sap/redis-operator/tmp/gen/apis/cache.cs.sap.com/v1alpha1 \
+"$GOBIN"/lister-gen \
   --go-header-file "$BASEDIR"/hack/boilerplate.go.txt \
-  --output-package github.com/sap/redis-operator/pkg/client/listers \
-  --output-base "$TEMPDIR"/pkg/client \
-  --plural-exceptions Redis:redis
+  --output-pkg github.com/sap/redis-operator/pkg/client/listers \
+  --output-dir "$TEMPDIR"/pkg/client/listers \
+  --plural-exceptions Redis:redis \
+  github.com/sap/redis-operator/tmp/gen/apis/cache.cs.sap.com/v1alpha1
 
-"$BASEDIR"/bin/informer-gen \
-  --input-dirs github.com/sap/redis-operator/tmp/gen/apis/cache.cs.sap.com/v1alpha1 \
+"$GOBIN"/informer-gen \
   --versioned-clientset-package github.com/sap/redis-operator/pkg/client/clientset/versioned \
   --listers-package github.com/sap/redis-operator/pkg/client/listers \
   --go-header-file "$BASEDIR"/hack/boilerplate.go.txt \
-  --output-package github.com/sap/redis-operator/pkg/client/informers \
-  --output-base "$TEMPDIR"/pkg/client \
-  --plural-exceptions Redis:redis
+  --output-pkg github.com/sap/redis-operator/pkg/client/informers \
+  --output-dir "$TEMPDIR"/pkg/client/informers \
+  --plural-exceptions Redis:redis \
+  github.com/sap/redis-operator/tmp/gen/apis/cache.cs.sap.com/v1alpha1
 
 find "$TEMPDIR"/pkg/client -name "*.go" -exec \
   perl -pi -e "s#github\.com/sap/redis-operator/tmp/gen/apis/cache\.cs\.sap\.com/v1alpha1#github.com/sap/redis-operator/api/v1alpha1#g" \
   {} +
 
 rm -rf "$BASEDIR"/pkg/client
-mv "$TEMPDIR"/pkg/client/github.com/sap/redis-operator/pkg/client "$BASEDIR"/pkg
+mv "$TEMPDIR"/pkg/client "$BASEDIR"/pkg
 
 cd "$BASEDIR"
+go mod tidy
 go fmt ./pkg/client/...
 go vet ./pkg/client/...
