@@ -11,8 +11,8 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.76.1
 	github.com/redis/go-redis/v9 v9.6.1
-	github.com/sap/admission-webhook-runtime v0.1.41
-	github.com/sap/component-operator-runtime v0.3.36
+	github.com/sap/admission-webhook-runtime v0.1.42
+	github.com/sap/component-operator-runtime v0.3.37
 	github.com/sap/go-generics v0.2.19
 	golang.org/x/mod v0.21.0
 	k8s.io/api v0.31.0
@@ -67,7 +67,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f // indirect
-	github.com/prometheus/client_golang v1.20.2 // indirect
+	github.com/prometheus/client_golang v1.20.3 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
