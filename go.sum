@@ -179,6 +179,8 @@ github.com/prometheus/client_golang v1.20.2 h1:5ctymQzZlyOON1666svgwn3s6IKWgfbjs
 github.com/prometheus/client_golang v1.20.2/go.mod h1:PIEt8X02hGcP8JWbeHyeZ53Y/jReSnHgO035n//V5WE=
 github.com/prometheus/client_golang v1.20.3 h1:oPksm4K8B+Vt35tUhw6GbSNSgVlVSBH0qELP/7u83l4=
 github.com/prometheus/client_golang v1.20.3/go.mod h1:PIEt8X02hGcP8JWbeHyeZ53Y/jReSnHgO035n//V5WE=
+github.com/prometheus/client_golang v1.20.4 h1:Tgh3Yr67PaOv/uTqloMsCEdeuFTatm5zIq5+qNN23vI=
+github.com/prometheus/client_golang v1.20.4/go.mod h1:PIEt8X02hGcP8JWbeHyeZ53Y/jReSnHgO035n//V5WE=
 github.com/prometheus/client_model v0.6.0 h1:k1v3CzpSRUTrKMppY35TLwPvxHqBu0bYgxZzqGIgaos=
 github.com/prometheus/client_model v0.6.0/go.mod h1:NTQHnmxFpouOD0DpvP4XujX3CdOAGQPoaGhyTchlyt8=
 github.com/prometheus/client_model v0.6.1 h1:ZKSh/rekM+n3CeS952MLRAdFwIKqeY8b62p8ais2e9E=
@@ -217,6 +219,8 @@ github.com/sap/component-operator-runtime v0.3.37 h1:QsKCMx3LUN2k6QUyIQxvwW71Y9N
 github.com/sap/component-operator-runtime v0.3.37/go.mod h1:AOSOtGZENbuxks7wOjPqDXPv2vi2D6zYb2oS/y8AZJY=
 github.com/sap/component-operator-runtime v0.3.38 h1:gWQs1V5c2LczsNOw6IOd/dOsAeevOIIZZKK7+Er5O1M=
 github.com/sap/component-operator-runtime v0.3.38/go.mod h1:VrFEgBWwKdl+tIpHfb+oT8/LnqfwEbx5UmjvxFLlCh0=
+github.com/sap/component-operator-runtime v0.3.39 h1:sGAW4H24eXN5Pz4MySfARV8vPdwUJ5RzrxX/IulmcCI=
+github.com/sap/component-operator-runtime v0.3.39/go.mod h1:StesjABBWMEXkDeARF0Ytav3+nAe6QXKebdQLIbQULI=
 github.com/sap/go-generics v0.2.13 h1:rSED7M+S7aw/9AomJq7omjgZtwvoixHsfVbOiCWs4cM=
 github.com/sap/go-generics v0.2.13/go.mod h1:G6v+AnJtKlUGB/ATd+zdUcosvBdUSyrHg7/kn5UKgx8=
 github.com/sap/go-generics v0.2.18 h1:vkfXvxG9KICMxZw2PoLQE78tvSCrY0Qemrclg2MVniY=
