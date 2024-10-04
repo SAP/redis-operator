@@ -235,6 +235,8 @@ github.com/sap/go-generics v0.2.18 h1:vkfXvxG9KICMxZw2PoLQE78tvSCrY0Qemrclg2MVni
 github.com/sap/go-generics v0.2.18/go.mod h1:sZcy1CCChvTGv+OBXZIvK1RtK58thCS2NMld7nE3I4k=
 github.com/sap/go-generics v0.2.19 h1:7jhLhM0Bnq8Rwl5aOIHOBJem1WJ/oLTugz9H2+HGjwA=
 github.com/sap/go-generics v0.2.19/go.mod h1:GLFl9wBPK5ucywnbhkoH/tCSQy+T3cc+KJtNlzt370M=
+github.com/sap/go-generics v0.2.20 h1:xpED66QCjITv2TjkduQY5wH9ogzeQr9K8lcMzQ0CPLg=
+github.com/sap/go-generics v0.2.20/go.mod h1:RctuDlZAmijeTY6LDaqhLYeepxdiR8AxPxlu7UQHNz0=
 github.com/shopspring/decimal v1.2.0/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
 github.com/shopspring/decimal v1.3.1 h1:2Usl1nmF/WZucqkFZhnfFYxxxu8LG21F6nPQBE5gKV8=
 github.com/shopspring/decimal v1.3.1/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
