@@ -215,6 +215,8 @@ github.com/sap/admission-webhook-runtime v0.1.42 h1:/IldyutSNHvpfAnCoueyHBNwhYnZ
 github.com/sap/admission-webhook-runtime v0.1.42/go.mod h1:AI+Un5emF6vdq6XJb2foDKGIwWO9kDR4ldbmJlALmfo=
 github.com/sap/admission-webhook-runtime v0.1.43 h1:z+Vaqx8lr8UJfV6Od1Suki4BNhG2Pv694KX3xCMUfew=
 github.com/sap/admission-webhook-runtime v0.1.43/go.mod h1:9AIWkZDGZLZBn3VCqNvHGRD1JpSu+5bzwrhHWzk3vUE=
+github.com/sap/admission-webhook-runtime v0.1.44 h1:gMQ1I6MVWy6rcDyuaSyMNMfepx+cxvtfLRTBYwy5mdc=
+github.com/sap/admission-webhook-runtime v0.1.44/go.mod h1:Hqq5aW5pfyJ8saXFQvZXyCufBGkn5BpipJBjEgc9GeQ=
 github.com/sap/component-operator-runtime v0.3.34 h1:ewqs6mAQxYlBGsXffBkBWcwpZTPr6YL12NNBakQ/sn0=
 github.com/sap/component-operator-runtime v0.3.34/go.mod h1:nvtWaSpVyb+2d+AWhHPjyr187/yrt9ssVH7DxMyGkrU=
 github.com/sap/component-operator-runtime v0.3.35 h1:x/q1PmBevbWxiCP+yHmZUaAzlQLcpbkjURbgrO3E67E=
@@ -231,6 +233,8 @@ github.com/sap/component-operator-runtime v0.3.40 h1:y9xBdG/tYwLED9dzT0erHTvD3iQ
 github.com/sap/component-operator-runtime v0.3.40/go.mod h1:fOvb27YqQIv30YUxFc/XcjNKrYwrQ1XANu3z2MY22mU=
 github.com/sap/component-operator-runtime v0.3.41 h1:1q+/20ICELf3fiifF48lIghHuSQlAVbLrex9Vk44hvg=
 github.com/sap/component-operator-runtime v0.3.41/go.mod h1:frTTWBVq/zohn6pB2UNXcxPjOpzNZBZdP3s4B2d0Yq0=
+github.com/sap/component-operator-runtime v0.3.42 h1:Ye8toRB/OPKxyrW8Q00KEu26dZjBtEFPaMhheCV4C98=
+github.com/sap/component-operator-runtime v0.3.42/go.mod h1:frTTWBVq/zohn6pB2UNXcxPjOpzNZBZdP3s4B2d0Yq0=
 github.com/sap/go-generics v0.2.13 h1:rSED7M+S7aw/9AomJq7omjgZtwvoixHsfVbOiCWs4cM=
 github.com/sap/go-generics v0.2.13/go.mod h1:G6v+AnJtKlUGB/ATd+zdUcosvBdUSyrHg7/kn5UKgx8=
 github.com/sap/go-generics v0.2.18 h1:vkfXvxG9KICMxZw2PoLQE78tvSCrY0Qemrclg2MVniY=
