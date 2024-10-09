@@ -25,6 +25,8 @@ github.com/cert-manager/cert-manager v1.15.3 h1:/u9T0griwd5MegPfWbB7v0KcVcT9OJrE
 github.com/cert-manager/cert-manager v1.15.3/go.mod h1:stBge/DTvrhfQMB/93+Y62s+gQgZBsfL1o0C/4AL/mI=
 github.com/cert-manager/cert-manager v1.16.0 h1:Gz20ezVUW1hveItLurl4OuFmSwwo0d7vr5gULjyeGlc=
 github.com/cert-manager/cert-manager v1.16.0/go.mod h1:MfLVTL45hFZsqmaT1O0+b2ugaNNQQZttSFV9hASHUb0=
+github.com/cert-manager/cert-manager v1.16.1 h1:1ceFMqTtwiqY2vyfaRT85CNiVmK7pJjt3GebYCx9awY=
+github.com/cert-manager/cert-manager v1.16.1/go.mod h1:MfLVTL45hFZsqmaT1O0+b2ugaNNQQZttSFV9hASHUb0=
 github.com/cespare/xxhash/v2 v2.2.0 h1:DC2CZ1Ep5Y4k3ZQ899DldepgrayRUGE6BBZ/cd9Cj44=
 github.com/cespare/xxhash/v2 v2.2.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
@@ -235,6 +237,8 @@ github.com/sap/component-operator-runtime v0.3.41 h1:1q+/20ICELf3fiifF48lIghHuSQ
 github.com/sap/component-operator-runtime v0.3.41/go.mod h1:frTTWBVq/zohn6pB2UNXcxPjOpzNZBZdP3s4B2d0Yq0=
 github.com/sap/component-operator-runtime v0.3.42 h1:Ye8toRB/OPKxyrW8Q00KEu26dZjBtEFPaMhheCV4C98=
 github.com/sap/component-operator-runtime v0.3.42/go.mod h1:frTTWBVq/zohn6pB2UNXcxPjOpzNZBZdP3s4B2d0Yq0=
+github.com/sap/component-operator-runtime v0.3.43 h1:565jAWN1fcOSzCuGOTb+N/4KID0f310fd85wQTgOQdA=
+github.com/sap/component-operator-runtime v0.3.43/go.mod h1:DU5YsUNDihcyt5syPoIhwLDh9CvyFB3DQhTwNms8hvY=
 github.com/sap/go-generics v0.2.13 h1:rSED7M+S7aw/9AomJq7omjgZtwvoixHsfVbOiCWs4cM=
 github.com/sap/go-generics v0.2.13/go.mod h1:G6v+AnJtKlUGB/ATd+zdUcosvBdUSyrHg7/kn5UKgx8=
 github.com/sap/go-generics v0.2.18 h1:vkfXvxG9KICMxZw2PoLQE78tvSCrY0Qemrclg2MVniY=
@@ -361,6 +365,8 @@ golang.org/x/time v0.5.0 h1:o7cqy6amK/52YcAKIPlM3a+Fpj35zvRj2TP+e1xFSfk=
 golang.org/x/time v0.5.0/go.mod h1:3BpzKBy/shNhVucY/MWOyx10tF3SFh9QdLuxbVysPQM=
 golang.org/x/time v0.6.0 h1:eTDhh4ZXt5Qf0augr54TN6suAUudPcawVZeIAPU7D4U=
 golang.org/x/time v0.6.0/go.mod h1:3BpzKBy/shNhVucY/MWOyx10tF3SFh9QdLuxbVysPQM=
+golang.org/x/time v0.7.0 h1:ntUhktv3OPE6TgYxXWv9vKvUSJyIFJlyohwbkEwPrKQ=
+golang.org/x/time v0.7.0/go.mod h1:3BpzKBy/shNhVucY/MWOyx10tF3SFh9QdLuxbVysPQM=
 golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
 golang.org/x/tools v0.0.0-20191119224855-298f0cb1881e/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
 golang.org/x/tools v0.0.0-20200619180055-7c47624df98f/go.mod h1:EkVYQZoAsY45+roYkvgYkIh4xh/qjgUK9TdY2XT94GE=

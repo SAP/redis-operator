@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
-	github.com/cert-manager/cert-manager v1.16.0
+	github.com/cert-manager/cert-manager v1.16.1
 	github.com/google/uuid v1.6.0
 	github.com/onsi/ginkgo/v2 v2.20.2
 	github.com/onsi/gomega v1.34.2
@@ -12,7 +12,7 @@ require (
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.77.1
 	github.com/redis/go-redis/v9 v9.6.1
 	github.com/sap/admission-webhook-runtime v0.1.44
-	github.com/sap/component-operator-runtime v0.3.42
+	github.com/sap/component-operator-runtime v0.3.43
 	github.com/sap/go-generics v0.2.20
 	golang.org/x/mod v0.21.0
 	k8s.io/api v0.31.1
@@ -84,7 +84,7 @@ require (
 	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/term v0.24.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
-	golang.org/x/time v0.6.0 // indirect
+	golang.org/x/time v0.7.0 // indirect
 	golang.org/x/tools v0.24.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
