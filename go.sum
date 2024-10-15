@@ -243,6 +243,8 @@ github.com/sap/component-operator-runtime v0.3.43 h1:565jAWN1fcOSzCuGOTb+N/4KID0
 github.com/sap/component-operator-runtime v0.3.43/go.mod h1:DU5YsUNDihcyt5syPoIhwLDh9CvyFB3DQhTwNms8hvY=
 github.com/sap/component-operator-runtime v0.3.44 h1:mWxuF5xZykHlxG6u5xQO4w8qBWQgRCBaQ41ADeXqiVc=
 github.com/sap/component-operator-runtime v0.3.44/go.mod h1:dX+RWTel9Nor09dtclsUgIl0QamiFzAQnsZsETnve7U=
+github.com/sap/component-operator-runtime v0.3.45 h1:1LFggU0O+JS4AzAlgq1aTFCrKhiIizS0hOYElew9qRs=
+github.com/sap/component-operator-runtime v0.3.45/go.mod h1:8iVDg1qTsUv+/T5OUu00HdK8dkcLEjE+wrIsvtIZ6Ck=
 github.com/sap/go-generics v0.2.13 h1:rSED7M+S7aw/9AomJq7omjgZtwvoixHsfVbOiCWs4cM=
 github.com/sap/go-generics v0.2.13/go.mod h1:G6v+AnJtKlUGB/ATd+zdUcosvBdUSyrHg7/kn5UKgx8=
 github.com/sap/go-generics v0.2.18 h1:vkfXvxG9KICMxZw2PoLQE78tvSCrY0Qemrclg2MVniY=
