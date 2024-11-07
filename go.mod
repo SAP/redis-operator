@@ -14,7 +14,7 @@ require (
 	github.com/sap/admission-webhook-runtime v0.1.44
 	github.com/sap/component-operator-runtime v0.3.45
 	github.com/sap/go-generics v0.2.20
-	golang.org/x/mod v0.21.0
+	golang.org/x/mod v0.22.0
 	k8s.io/api v0.31.2
 	k8s.io/apiextensions-apiserver v0.31.2
 	k8s.io/apimachinery v0.31.2
