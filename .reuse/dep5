@@ -29,6 +29,6 @@ Copyright:  2024 SAP SE or an SAP affiliate company and redis-operator contribut
 License: Apache-2.0
 
 Files: pkg/operator/data/charts/redis/*
-Copyright: Copyright © 2024VMware, Inc.
+Copyright: Copyright © 2024 VMware, Inc.
 License: Apache-2.0
 Comment: Helm chart from Bitnami copied from oci://registry-1.docker.io/bitnamicharts/redis
