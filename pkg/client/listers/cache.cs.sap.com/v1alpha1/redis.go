@@ -1,5 +1,5 @@
 /*
-SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and redis-operator contributors
+SPDX-FileCopyrightText: 2024SAP SE or an SAP affiliate company and redis-operator contributors
 SPDX-License-Identifier: Apache-2.0
 */
 
