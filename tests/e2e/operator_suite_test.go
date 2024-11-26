@@ -330,7 +330,6 @@ var _ = Describe("Deploy Redis", func() {
 	})
 
 	It("should deploy Redis without sentinel, 1 node, with TLS disabled with metrics, service monitor and prometheus rule enabled", func() {
-		fmt.Printf("Test output")
 		var duration prometheusv1.Duration = "5m"
 		redis := &operatorv1alpha1.Redis{
 			ObjectMeta: metav1.ObjectMeta{
@@ -621,8 +620,8 @@ func checkServiceMonitor(redis *operatorv1alpha1.Redis) {
 
 	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].Interval).To(Equal(redis.Spec.Metrics.ServiceMonitor.Interval))
 	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].ScrapeTimeout).To(Equal(redis.Spec.Metrics.ServiceMonitor.ScrapeTimeout))
-	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].RelabelConfigs).To(Equal(redis.Spec.Metrics.ServiceMonitor.Relabellings))
-	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].MetricRelabelConfigs).To(Equal(redis.Spec.Metrics.ServiceMonitor.MetricRelabellings))
+	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].RelabelConfigs).To(Equal(slices.Collect(redis.Spec.Metrics.ServiceMonitor.Relabellings, func(c *prometheusv1.RelabelConfig) prometheusv1.RelabelConfig { return *c })))
+	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].MetricRelabelConfigs).To(Equal(slices.Collect(redis.Spec.Metrics.ServiceMonitor.MetricRelabellings, func(c *prometheusv1.RelabelConfig) prometheusv1.RelabelConfig { return *c })))
 	Expect(serviceMonitor.Spec.Endpoints[len(serviceMonitor.Spec.Endpoints)-1].HonorLabels).To(Equal(redis.Spec.Metrics.ServiceMonitor.HonorLabels))
 	for k, v := range redis.Spec.Metrics.ServiceMonitor.AdditionalLabels {
 		Expect(serviceMonitor.ObjectMeta.Labels).Should(HaveKeyWithValue(k, v))
