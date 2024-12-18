@@ -20,7 +20,7 @@ defaults:
 jobs:
   publish-docker:
     name: Publish Docker image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
@@ -52,7 +52,7 @@ jobs:
         images: ${{ steps.prepare-repository-name.outputs.repository }}
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         platforms: linux/amd64,linux/arm64
         context: .
@@ -70,7 +70,7 @@ jobs:
 
   publish-crds:
     name: Publish CRD image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
@@ -103,7 +103,7 @@ jobs:
 
   update-chart:
     name: Update Helm chart
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [publish-docker,publish-crds]
 
     steps:
