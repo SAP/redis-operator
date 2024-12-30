@@ -18,6 +18,21 @@ defaults:
     shell: bash
 
 jobs:
+  publish-go-module:
+    name: Publish go module
+    runs-on: ubuntu-24.04
+
+    steps:
+    - name: Trigger registration on sum.golang.org
+      run: |
+        repository=${{ github.repository }}
+        tag=${{ github.event.release.tag_name }}
+        curl -sSf \
+          --max-time 30 \
+          --retry 5 \
+          --retry-max-time 300 \
+          https://sum.golang.org/lookup/github.com/${repository,,}@${tag}
+
   publish-docker:
     name: Publish Docker image
     runs-on: ubuntu-24.04
