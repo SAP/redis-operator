@@ -47,14 +47,14 @@ type MetricsProperties struct {
 }
 
 type MetricsServiceMonitorProperties struct {
-	Enabled            bool                          `json:"enabled,omitempty"`
-	Interval           prometheusv1.Duration         `json:"interval,omitempty"`
-	ScrapeTimeout      prometheusv1.Duration         `json:"scrapeTimeout,omitempty"`
-	Relabellings       []*prometheusv1.RelabelConfig `json:"relabellings,omitempty"`
-	MetricRelabellings []*prometheusv1.RelabelConfig `json:"metricRelabelings,omitempty"`
-	HonorLabels        bool                          `json:"honorLabels,omitempty"`
-	AdditionalLabels   map[string]string             `json:"additionalLabels,omitempty"`
-	PodTargetLabels    []string                      `json:"podTargetLabels,omitempty"`
+	Enabled            bool                         `json:"enabled,omitempty"`
+	Interval           prometheusv1.Duration        `json:"interval,omitempty"`
+	ScrapeTimeout      prometheusv1.Duration        `json:"scrapeTimeout,omitempty"`
+	Relabellings       []prometheusv1.RelabelConfig `json:"relabellings,omitempty"`
+	MetricRelabellings []prometheusv1.RelabelConfig `json:"metricRelabelings,omitempty"`
+	HonorLabels        bool                         `json:"honorLabels,omitempty"`
+	AdditionalLabels   map[string]string            `json:"additionalLabels,omitempty"`
+	PodTargetLabels    []string                     `json:"podTargetLabels,omitempty"`
 }
 
 type MetricsPrometheusRuleProperties struct {

@@ -330,7 +330,6 @@ var _ = Describe("Deploy Redis", func() {
 	})
 
 	It("should deploy Redis without sentinel, 1 node, with TLS disabled with metrics, service monitor and prometheus rule enabled", func() {
-		fmt.Printf("Test output")
 		var duration prometheusv1.Duration = "5m"
 		redis := &operatorv1alpha1.Redis{
 			ObjectMeta: metav1.ObjectMeta{
@@ -351,11 +350,11 @@ var _ = Describe("Deploy Redis", func() {
 						Enabled:       true,
 						Interval:      "30s",
 						ScrapeTimeout: "10s",
-						Relabellings: []*prometheusv1.RelabelConfig{
+						Relabellings: []prometheusv1.RelabelConfig{
 							{SourceLabels: []prometheusv1.LabelName{"__meta_kubernetes_namespace"}, TargetLabel: "namespace"},
 							{SourceLabels: []prometheusv1.LabelName{"__meta_kubernetes_pod_name"}, TargetLabel: "pod"},
 						},
-						MetricRelabellings: []*prometheusv1.RelabelConfig{
+						MetricRelabellings: []prometheusv1.RelabelConfig{
 							{SourceLabels: []prometheusv1.LabelName{"__name__"}, TargetLabel: "metric"},
 							{SourceLabels: []prometheusv1.LabelName{"__meta_kubernetes_pod_name"}, TargetLabel: "pod"},
 						},

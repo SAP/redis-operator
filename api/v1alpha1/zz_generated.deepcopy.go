@@ -115,24 +115,16 @@ func (in *MetricsServiceMonitorProperties) DeepCopyInto(out *MetricsServiceMonit
 	*out = *in
 	if in.Relabellings != nil {
 		in, out := &in.Relabellings, &out.Relabellings
-		*out = make([]*monitoringv1.RelabelConfig, len(*in))
+		*out = make([]monitoringv1.RelabelConfig, len(*in))
 		for i := range *in {
-			if (*in)[i] != nil {
-				in, out := &(*in)[i], &(*out)[i]
-				*out = new(monitoringv1.RelabelConfig)
-				(*in).DeepCopyInto(*out)
-			}
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 	if in.MetricRelabellings != nil {
 		in, out := &in.MetricRelabellings, &out.MetricRelabellings
-		*out = make([]*monitoringv1.RelabelConfig, len(*in))
+		*out = make([]monitoringv1.RelabelConfig, len(*in))
 		for i := range *in {
-			if (*in)[i] != nil {
-				in, out := &(*in)[i], &(*out)[i]
-				*out = new(monitoringv1.RelabelConfig)
-				(*in).DeepCopyInto(*out)
-			}
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 	if in.AdditionalLabels != nil {
