@@ -18,7 +18,7 @@ type FakeCacheV1alpha1 struct {
 }
 
 func (c *FakeCacheV1alpha1) Redis(namespace string) v1alpha1.RedisInterface {
-	return &FakeRedis{c, namespace}
+	return newFakeRedis(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

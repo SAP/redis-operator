@@ -8,13 +8,13 @@ SPDX-License-Identifier: Apache-2.0
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	cachecssapcomv1alpha1 "github.com/sap/redis-operator/api/v1alpha1"
+	apiscachecssapcomv1alpha1 "github.com/sap/redis-operator/api/v1alpha1"
 	versioned "github.com/sap/redis-operator/pkg/client/clientset/versioned"
 	internalinterfaces "github.com/sap/redis-operator/pkg/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/sap/redis-operator/pkg/client/listers/cache.cs.sap.com/v1alpha1"
+	cachecssapcomv1alpha1 "github.com/sap/redis-operator/pkg/client/listers/cache.cs.sap.com/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -25,7 +25,7 @@ import (
 // Redis.
 type RedisInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.RedisLister
+	Lister() cachecssapcomv1alpha1.RedisLister
 }
 
 type redisInformer struct {
@@ -60,7 +60,7 @@ func NewFilteredRedisInformer(client versioned.Interface, namespace string, resy
 				return client.CacheV1alpha1().Redis(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&cachecssapcomv1alpha1.Redis{},
+		&apiscachecssapcomv1alpha1.Redis{},
 		resyncPeriod,
 		indexers,
 	)
@@ -71,9 +71,9 @@ func (f *redisInformer) defaultInformer(client versioned.Interface, resyncPeriod
 }
 
 func (f *redisInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&cachecssapcomv1alpha1.Redis{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscachecssapcomv1alpha1.Redis{}, f.defaultInformer)
 }
 
-func (f *redisInformer) Lister() v1alpha1.RedisLister {
-	return v1alpha1.NewRedisLister(f.Informer().GetIndexer())
+func (f *redisInformer) Lister() cachecssapcomv1alpha1.RedisLister {
+	return cachecssapcomv1alpha1.NewRedisLister(f.Informer().GetIndexer())
 }
