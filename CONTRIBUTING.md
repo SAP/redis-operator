@@ -2,7 +2,7 @@
 
 ## Code of Conduct
 
-All members of the project community must abide by the [SAP Open Source Code of Conduct](https://github.com/SAP/.github/blob/main/CODE_OF_CONDUCT.md).
+All members of the project community must abide by the [Contributor Covenant, version 2.1](CODE_OF_CONDUCT.md).
 Only by respecting each other we can develop a productive, collaborative community.
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting [a project maintainer](.reuse/dep5).
 
@@ -21,6 +21,12 @@ We use GitHub to manage reviews of pull requests.
 Should you wish to work on an issue, please claim it first by commenting on the GitHub issue that you want to work on. This is to prevent duplicated efforts from other contributors on the same issue.
 
 If you have questions about one of the issues, please comment on them, and one of the maintainers will clarify.
+
+## Contributing with AI-generated code
+
+As artificial intelligence evolves, AI-generated code is becoming valuable for many software projects, including open-source initiatives. While we recognize the potential benefits of incorporating AI-generated content into our open-source projects there a certain requirements that need to be reflected and adhered to when making contributions.
+
+Please see our [guideline for AI-generated code contributions to SAP Open Source Software Projects](CONTRIBUTING_USING_GENAI.md) for these requirements.
 
 ## Contributing Code or Documentation
 
