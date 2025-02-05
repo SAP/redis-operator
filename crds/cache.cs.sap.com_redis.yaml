@@ -5788,6 +5788,10 @@ spec:
                     kind:
                       description: API kind.
                       type: string
+                    lastAppliedAt:
+                      description: Timestamp when this object was last applied.
+                      format: date-time
+                      type: string
                     managedTypes:
                       description: Managed types.
                       items:
