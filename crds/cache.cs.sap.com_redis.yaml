@@ -966,6 +966,14 @@ spec:
                         x-kubernetes-list-type: atomic
                     type: object
                 type: object
+              auth:
+                description: AuthProperties models for authentication
+                properties:
+                  enabled:
+                    type: boolean
+                  existingSecret:
+                    type: string
+                type: object
               binding:
                 description: BindingProperties models custom properties for the generated
                   binding secret
