@@ -9,7 +9,12 @@ fullnameOverride: {{ $fullname }}
 {{- $tlsEnabled := (dig "tls" "enabled" false .) }}
 {{- $persistenceEnabled := (dig "persistence" "enabled" false .) }}
 
-{{- with .Version}}
+{{- $bindingSecretName := (dig "binding" "secretName" "" .) }}
+{{- if eq $bindingSecretName "" }}
+{{- $bindingSecretName = printf "%s-binding" $fullname }}
+{{- end }}
+
+{{- with .version}}
 image:
   tag: {{ . }}
 {{- end }}
@@ -81,12 +86,10 @@ master:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- end }}
-  {{- if .sidecars }}
-  sidecars:
   {{- with .sidecars }}
+  sidecars:
     {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{- end }}   
+  {{- end }} 
   
 replica:
   replicaCount: {{ ternary .replicas (max (sub .replicas 1) 0) $sentinelEnabled }}
@@ -142,12 +145,10 @@ replica:
     {{- toYaml . | nindent 4 }}
   {{- end }} 
   {{- end }}
-  {{- if .sidecars }}
-  sidecars:
   {{- with .sidecars }}
+  sidecars:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- end }}   
 
 {{- if $sentinelEnabled }}
 sentinel:
@@ -214,7 +215,7 @@ extraDeploy:
 - apiVersion: v1
   kind: Secret
   metadata:
-    name: {{ $fullname }}-binding
+    name: {{ $bindingSecretName }}
     annotations:
       helm.sh/hook: post-install
   type: Opaque
