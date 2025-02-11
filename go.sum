@@ -150,10 +150,16 @@ github.com/rogpeppe/go-internal v1.13.1/go.mod h1:uMEvuHeurkdAXX61udpOXGD/AzZDWN
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/sap/admission-webhook-runtime v0.1.57 h1:/iLRX4kwqKerOsUNODGan6B0B695PJNdbJzox6wHovI=
 github.com/sap/admission-webhook-runtime v0.1.57/go.mod h1:kjJl3+0H3I4XGkIqUh/ugQdiLSqNfZZphS/HbuG72Tw=
+github.com/sap/admission-webhook-runtime v0.1.58 h1:Vt4XnGd6oowaVF7h1ZJRb9/YZsGIxa8HHlB6QT+nKkA=
+github.com/sap/admission-webhook-runtime v0.1.58/go.mod h1:a0TVl2/pbSGyUBkrBzxxzfKPFT4yMRj8WWC0MaqeySc=
 github.com/sap/component-operator-runtime v0.3.69 h1:LE+EoTTppAIDA0ELRR/D1IbiusiE6K1VUqKaIM0J1eY=
 github.com/sap/component-operator-runtime v0.3.69/go.mod h1:v8x6sWW/sZt6SEi/4IsDO9ajr/CTdQedKXmwFJxFWzE=
+github.com/sap/component-operator-runtime v0.3.71 h1:P42w/oMrsBUQjdQtFJgzX15CY/wWSdmiDsF7sNfkMHw=
+github.com/sap/component-operator-runtime v0.3.71/go.mod h1:v8x6sWW/sZt6SEi/4IsDO9ajr/CTdQedKXmwFJxFWzE=
 github.com/sap/go-generics v0.2.26 h1:k1Gb5MrR9lRksp+8pljUNmdT9bHxmkuvMUw7e6GpwQg=
 github.com/sap/go-generics v0.2.26/go.mod h1:aL5vyHr72/qEzbUOgewA/srS5Gf5nbxEYVoawQRG72s=
+github.com/sap/go-generics v0.2.27 h1:NqqAaJj6Nj3ZDhoFcVJyMT/5D9YtBwO1pCewW0cFotQ=
+github.com/sap/go-generics v0.2.27/go.mod h1:YyEx00Jl5fIZx7jy6ss2m87UUzTQfVysPHUUOKnRj6Q=
 github.com/shopspring/decimal v1.4.0 h1:bxl37RwXBklmTi0C79JfXCEBD1cqqHt0bbgBAGFp81k=
 github.com/shopspring/decimal v1.4.0/go.mod h1:gawqmDU56v4yIKSwfBSFip1HdCCXN8/+DMd9qYNcwME=
 github.com/spf13/afero v1.12.0 h1:UcOPyRBYczmFn6yvphxkn9ZEOY65cpwGKb5mL36mrqs=
@@ -275,8 +281,10 @@ sigs.k8s.io/controller-runtime v0.20.1 h1:JbGMAG/X94NeM3xvjenVUaBjy6Ui4Ogd/J5Ztj
 sigs.k8s.io/controller-runtime v0.20.1/go.mod h1:BrP3w158MwvB3ZbNpaAcIKkHQ7YGpYnzpoSTZ8E14WU=
 sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250205173218-2e8ba92873fd h1:FxJIoYhS7mC1Tl0C60vyh/6ukYrKTcMKSHtHhVlq8KE=
 sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250205173218-2e8ba92873fd/go.mod h1:Cq9jUhwSYol5tNB0O/1vLYxNV9KqnhpvEa6HvJ1w0wY=
+sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250211091558-894df3a7e664/go.mod h1:Cq9jUhwSYol5tNB0O/1vLYxNV9KqnhpvEa6HvJ1w0wY=
 sigs.k8s.io/controller-tools v0.17.1 h1:bQ+dKCS7jY9AgpefenBDtm6geJZCHVKbegpLynxgyus=
 sigs.k8s.io/controller-tools v0.17.1/go.mod h1:3QXAdrmdxYuQ4MifvbCAFD9wLXn7jylnfBPYS4yVDdc=
+sigs.k8s.io/controller-tools v0.17.2/go.mod h1:4q5tZG2JniS5M5bkiXY2/potOiXyhoZVw/U48vLkXk0=
 sigs.k8s.io/gateway-api v1.1.0 h1:DsLDXCi6jR+Xz8/xd0Z1PYl2Pn0TyaFMOPPZIj4inDM=
 sigs.k8s.io/gateway-api v1.1.0/go.mod h1:ZH4lHrL2sDi0FHZ9jjneb8kKnGzFWyrTya35sWUTrRs=
 sigs.k8s.io/json v0.0.0-20241014173422-cfa47c3a1cc8 h1:gBQPwqORJ8d8/YNZWEjoZs7npUVDpVXUUOFfW6CgAqE=
