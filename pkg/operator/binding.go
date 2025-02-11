@@ -82,7 +82,12 @@ func reconcileBinding(ctx context.Context, client client.Client, redis *operator
 	}
 
 	bindingSecret := &corev1.Secret{}
-	bindingSecretName := fmt.Sprintf("redis-%s-binding", redis.Name)
+	bindingSecretName := ""
+	if redis.Spec.Binding != nil && redis.Spec.Binding.SecretName != "" {
+		bindingSecretName = redis.Spec.Binding.SecretName
+	} else {
+		bindingSecretName = fmt.Sprintf("redis-%s-binding", redis.Name)
+	}
 	if err := client.Get(ctx, types.NamespacedName{Namespace: redis.Namespace, Name: bindingSecretName}, bindingSecret); err != nil {
 		return err
 	}

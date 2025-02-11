@@ -98,7 +98,7 @@ stringData:
   tlsEnabled: "true"
 ```
 
-The format of the secret data can be overridden by specifying a go temmplate as `spec.binding.template`.
+The format of the secret data can be overridden by specifying a go template as `spec.binding.template`.
 In that go template, the following variables may be used:
 - `.sentinelEnabled` (whether sentinel mode is enabled or not)
 - `.masterHost`, `.masterPort`, `.replicaHost`, `.replicaPort` (only if sentinel is disabled)
