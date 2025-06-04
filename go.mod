@@ -4,7 +4,7 @@ go 1.24.3
 
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
-	github.com/cert-manager/cert-manager v1.17.0
+	github.com/cert-manager/cert-manager v1.17.2
 	github.com/google/uuid v1.6.0
 	github.com/onsi/ginkgo/v2 v2.23.4
 	github.com/onsi/gomega v1.37.0
@@ -22,7 +22,7 @@ require (
 	k8s.io/code-generator v0.33.1
 	k8s.io/kube-aggregator v0.33.1
 	sigs.k8s.io/controller-runtime v0.21.0
-	sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250205173218-2e8ba92873fd
+	sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250603172439-8f791a22fb8a
 	sigs.k8s.io/controller-tools v0.18.0
 	sigs.k8s.io/yaml v1.4.0
 )
