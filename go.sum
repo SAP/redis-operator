@@ -282,6 +282,7 @@ sigs.k8s.io/controller-runtime v0.21.0 h1:CYfjpEuicjUecRk+KAeyYh+ouUBn4llGyDYytI
 sigs.k8s.io/controller-runtime v0.21.0/go.mod h1:OSg14+F65eWqIu4DceX7k/+QRAbTTvxeQSNSOQpukWM=
 sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250603172439-8f791a22fb8a h1:IDgL/v6yAjDxAS9pxslLJnE3cJ+gyUQbq0XNzxfR3qU=
 sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250603172439-8f791a22fb8a/go.mod h1:zxemiV1fQ3IJnXX0VeOb6qbHp2Wtv3s1w+gftNeHWTg=
+sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250604165838-d6126d850224/go.mod h1:zxemiV1fQ3IJnXX0VeOb6qbHp2Wtv3s1w+gftNeHWTg=
 sigs.k8s.io/controller-tools v0.18.0 h1:rGxGZCZTV2wJreeRgqVoWab/mfcumTMmSwKzoM9xrsE=
 sigs.k8s.io/controller-tools v0.18.0/go.mod h1:gLKoiGBriyNh+x1rWtUQnakUYEujErjXs9pf+x/8n1U=
 sigs.k8s.io/gateway-api v1.1.0 h1:DsLDXCi6jR+Xz8/xd0Z1PYl2Pn0TyaFMOPPZIj4inDM=
