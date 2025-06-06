@@ -1,6 +1,6 @@
 module github.com/sap/redis-operator
 
-go 1.24.3
+go 1.24.4
 
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
@@ -22,7 +22,7 @@ require (
 	k8s.io/code-generator v0.33.1
 	k8s.io/kube-aggregator v0.33.1
 	sigs.k8s.io/controller-runtime v0.21.0
-	sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250603172439-8f791a22fb8a
+	sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20250604165838-d6126d850224
 	sigs.k8s.io/controller-tools v0.18.0
 	sigs.k8s.io/yaml v1.4.0
 )
