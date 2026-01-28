@@ -9,7 +9,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.27.5
 	github.com/onsi/gomega v1.39.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.88.0
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.88.1
 	github.com/redis/go-redis/v9 v9.17.3
 	github.com/sap/admission-webhook-runtime v0.1.83
 	github.com/sap/component-operator-runtime v0.3.129
@@ -21,8 +21,8 @@ require (
 	k8s.io/client-go v0.35.0
 	k8s.io/code-generator v0.35.0
 	k8s.io/kube-aggregator v0.35.0
-	sigs.k8s.io/controller-runtime v0.23.0
-	sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20260125161707-82cc073adb06
+	sigs.k8s.io/controller-runtime v0.23.1
+	sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20260126224948-cf2e741fe0fd
 	sigs.k8s.io/controller-tools v0.20.0
 	sigs.k8s.io/yaml v1.6.0
 )
@@ -107,5 +107,5 @@ require (
 	sigs.k8s.io/gateway-api v1.4.0 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/randfill v1.0.0 // indirect
-	sigs.k8s.io/structured-merge-diff/v6 v6.3.1 // indirect
+	sigs.k8s.io/structured-merge-diff/v6 v6.3.2-0.20260122202528-d9cc6641c482 // indirect
 )
