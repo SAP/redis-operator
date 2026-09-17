@@ -14,7 +14,7 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// Redis returns a RedisInformer.
-	Redis() RedisInformer
+	Redis() TypedRedisInformer
 }
 
 type version struct {
@@ -28,7 +28,7 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// Redis returns a RedisInformer.
-func (v *version) Redis() RedisInformer {
+// Redis returns a TypedRedisInformer.
+func (v *version) Redis() TypedRedisInformer {
 	return &redisInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

@@ -23,11 +23,39 @@ import (
 )
 
 // RedisInformer provides access to a shared informer and lister for
-// Redis.
+// Redis. Prefer using the type-safe variant (see [TypedRedisInformer]).
 type RedisInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() cachecssapcomv1alpha1.RedisLister
 }
+
+// TypedRedisInformer provides access to a shared informer and lister for
+// Redis, including the type-safe TypedInformer variant.
+// It is a superset of RedisInformer.
+type TypedRedisInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() RedisIndexInformer
+	Lister() cachecssapcomv1alpha1.RedisLister
+}
+
+// RedisIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type RedisIndexInformer cache.TypedSharedIndexInformer[*apiscachecssapcomv1alpha1.Redis]
+
+// RedisHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for Redis.
+type RedisHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiscachecssapcomv1alpha1.Redis]
+
+// RedisDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for Redis.
+type RedisDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiscachecssapcomv1alpha1.Redis]
+
+// RedisFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for Redis.
+type RedisFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiscachecssapcomv1alpha1.Redis]
+
+// RedisIndexers is a specialization of [cache.TypedIndexers] for Redis.
+type RedisIndexers = cache.TypedIndexers[*apiscachecssapcomv1alpha1.Redis]
+
+// DeletedRedis is a specialization of [cache.DeletedObject] for Redis.
+type DeletedRedis = cache.DeletedObject[*apiscachecssapcomv1alpha1.Redis]
 
 type redisInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -38,25 +66,49 @@ type redisInformer struct {
 // NewRedisInformer constructs a new informer for Redis type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedRedisInformer]).
 func NewRedisInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewRedisInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedRedisInformer constructs a new informer for Redis type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedRedisInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers RedisIndexers) RedisIndexInformer {
+	return NewTypedRedisInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredRedisInformer constructs a new informer for Redis type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredRedisInformer]).
 func NewFilteredRedisInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewRedisInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedRedisInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredRedisInformer constructs a new informer for Redis type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredRedisInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers RedisIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) RedisIndexInformer {
+	return NewTypedRedisInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewRedisInformerWithOptions constructs a new informer for Redis type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedRedisInformerWithOptions]).
 func NewRedisInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedRedisInformerWithOptions(client, namespace, options)
+}
+
+// NewTypedRedisInformerWithOptions constructs a new informer for Redis type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedRedisInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) RedisIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "cache.cs.sap.com", Version: "v1alpha1", Resource: "rediss"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiscachecssapcomv1alpha1.Redis](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -89,17 +141,57 @@ func NewRedisInformerWithOptions(client versioned.Interface, namespace string, o
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *redisInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewRedisInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedRedisInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *redisInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiscachecssapcomv1alpha1.Redis{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *redisInformer) TypedInformer() RedisIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiscachecssapcomv1alpha1.Redis](f.factory.InformerFor(&apiscachecssapcomv1alpha1.Redis{}, f.defaultInformer))
 }
 
 func (f *redisInformer) Lister() cachecssapcomv1alpha1.RedisLister {
 	return cachecssapcomv1alpha1.NewRedisLister(f.Informer().GetIndexer())
+}
+
+// ToTypedRedisInformer converts an untyped informer into a TypedRedisInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *Redis. If that is not the case, calling type-safe methods of the returned
+// TypedRedisInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedRedisInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedRedisInformer(informer RedisInformer) TypedRedisInformer {
+	if informer, ok := informer.(TypedRedisInformer); ok {
+		return informer
+	}
+	return &redisTypedInformerAdapter{informer}
+}
+
+type redisTypedInformerAdapter struct {
+	RedisInformer
+}
+
+func (a *redisTypedInformerAdapter) TypedInformer() RedisIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiscachecssapcomv1alpha1.Redis](a.Informer())
+}
+
+// ToRedisIndexInformer converts an untyped informer into a RedisIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *Redis. If that is not the case, calling type-safe methods of the returned
+// RedisIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a RedisIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToRedisIndexInformer(informer cache.SharedIndexInformer) RedisIndexInformer {
+	if informer, ok := informer.(RedisIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiscachecssapcomv1alpha1.Redis](informer)
 }
