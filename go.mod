@@ -11,9 +11,9 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.94.1
 	github.com/redis/go-redis/v9 v9.22.0
-	github.com/sap/admission-webhook-runtime v0.1.110
-	github.com/sap/component-operator-runtime v0.3.170
-	github.com/sap/go-generics v0.2.75
+	github.com/sap/admission-webhook-runtime v0.1.111
+	github.com/sap/component-operator-runtime v0.3.171
+	github.com/sap/go-generics v0.2.76
 	golang.org/x/mod v0.41.0
 	k8s.io/api v0.37.1
 	k8s.io/apiextensions-apiserver v0.37.1
