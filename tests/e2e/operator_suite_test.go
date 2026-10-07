@@ -254,7 +254,7 @@ var _ = Describe("Deploy Redis", func() {
 			},
 		}
 		defer deleteRedis(redis, true, "60s")
-		createRedis(redis, true, "300s")
+		createRedis(redis, true, "600s")
 		doSomethingWithRedis(redis)
 	})
 
@@ -281,7 +281,7 @@ var _ = Describe("Deploy Redis", func() {
 			},
 		}
 		defer deleteRedis(redis, true, "60s")
-		createRedis(redis, true, "300s")
+		createRedis(redis, true, "600s")
 		doSomethingWithRedis(redis)
 	})
 
@@ -300,7 +300,7 @@ var _ = Describe("Deploy Redis", func() {
 			},
 		}
 		defer deleteRedis(redis, true, "60s")
-		createRedis(redis, true, "300s")
+		createRedis(redis, true, "600s")
 		doSomethingWithRedis(redis)
 	})
 
@@ -325,7 +325,7 @@ var _ = Describe("Deploy Redis", func() {
 			},
 		}
 		defer deleteRedis(redis, true, "60s")
-		createRedis(redis, true, "300s")
+		createRedis(redis, true, "600s")
 		doSomethingWithRedis(redis)
 	})
 
@@ -391,7 +391,7 @@ var _ = Describe("Deploy Redis", func() {
 			},
 		}
 		defer deleteRedis(redis, true, "60s")
-		createRedis(redis, true, "300s")
+		createRedis(redis, true, "600s")
 		doSomethingWithRedis(redis)
 		checkServiceForMetrics(redis)
 		checkServiceMonitor(redis)
